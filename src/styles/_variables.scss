@@ -1,0 +1,71 @@
+// Kurumsal Renk Paleti (Sellibra Logo'sundan)
+$primary-color: #2F4858;        // Ana koyu mavi/slate
+$secondary-color: #00D4A0;      // Turkuaz/yeşil vurgu
+$accent-color: #4A90E2;         // Yardımcı mavi
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+$light-color: #F5F7FA;          // Açık gri arka plan
+$dark-color: #1A2831;           // Çok koyu gri (text için)
+
+// Text colors
+$text-primary: #1A2831;
+$text-secondary: #6B7C8F;
+$text-muted: #98A9BC;
+
+// Border colors
+$border-color: #E1E8ED;
+
+// Bootstrap theme colors override
+$theme-colors: (
+  "primary": $primary-color,
+  "secondary": $secondary-color,
+  "success": $success-color,
+  "danger": $danger-color,
+  "warning": $warning-color,
+  "info": $info-color,
+  "light": $light-color,
+  "dark": $dark-color,
+);
+
+// Typography - Daha küçük font boyutları
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+$font-size-base: 0.875rem;      // 14px (varsayılan 16px'den küçük)
+$font-size-sm: 0.75rem;         // 12px
+$font-size-lg: 1rem;            // 16px
+$font-size-xl: 1.125rem;        // 18px
+
+$h1-font-size: 1.875rem;        // 30px
+$h2-font-size: 1.5rem;          // 24px
+$h3-font-size: 1.25rem;         // 20px
+$h4-font-size: 1.125rem;        // 18px
+$h5-font-size: 1rem;            // 16px
+$h6-font-size: 0.875rem;        // 14px
+
+// Spacing - Biraz daha kompakt
+$spacer: 0.875rem;              // 14px (varsayılan 16px'den küçük)
+$spacer-sm: 0.5rem;             // 8px
+$spacer-md: 1rem;               // 16px
+$spacer-lg: 1.5rem;             // 24px
+$spacer-xl: 2rem;               // 32px
+
+// Border radius
+$border-radius: 0.5rem;         // 8px
+$border-radius-sm: 0.25rem;     // 4px
+$border-radius-lg: 0.75rem;     // 12px
+
+// Shadows - Daha soft ve kurumsal
+$box-shadow-sm: 0 0.125rem 0.375rem rgba(47, 72, 88, 0.08);
+$box-shadow: 0 0.25rem 0.75rem rgba(47, 72, 88, 0.12);
+$box-shadow-lg: 0 0.5rem 1.5rem rgba(47, 72, 88, 0.15);
+
+// Component boyutları - Daha kompakt
+$card-padding: 1.25rem;         // 20px (varsayılan 24px'den küçük)
+$card-padding-sm: 1rem;         // 16px
+$button-padding-y: 0.5rem;      // 8px
+$button-padding-x: 1rem;        // 16px
+$input-height: 2.5rem;          // 40px (varsayılan 48px'den küçük)
+

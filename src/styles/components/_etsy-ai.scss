@@ -1,0 +1,393 @@
+@use '../variables' as *;
+
+.tool-card {
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  transition: all 0.3s ease;
+  box-shadow: $box-shadow-sm;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow;
+    border-color: $secondary-color;
+  }
+
+  .tool-icon {
+    font-size: 2rem;
+    margin-bottom: 0.875rem;
+    color: $secondary-color;
+  }
+
+  h5 {
+    font-size: $h5-font-size;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 0.625rem;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    line-height: 1.6;
+  }
+
+  .text-muted {
+    color: $text-secondary !important;
+  }
+
+  .btn {
+    font-size: $font-size-sm;
+    padding: 0.5rem 1.25rem;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+// Profile avatar
+.profile-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: $font-size-lg;
+}
+
+// Token Display - Minimal Version
+.token-display {
+  .token-card {
+    background: linear-gradient(135deg, #FFB800 0%, #FF8C00 100%);
+    border-radius: $border-radius-sm;
+    padding: 0.6rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: $box-shadow-sm;
+    color: white;
+    white-space: nowrap;
+
+    .token-icon {
+      font-size: 1.3rem;
+      color: white;
+      opacity: 0.95;
+    }
+
+    .token-info {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+
+      .token-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        opacity: 0.95;
+      }
+
+      .token-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+    }
+  }
+}
+
+// Page header with token display
+.page-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  .page-header {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 0; // Allow text truncation if needed
+  }
+
+  .token-display {
+    flex-shrink: 0;
+  }
+}
+
+// Etsy-AI specific styles
+.etsy-ai-container {
+  .page-header-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+
+    label {
+      font-size: $font-size-base;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: $text-primary;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      font-size: $font-size-base;
+      transition: border-color 0.3s, box-shadow 0.3s;
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 160, 0.15);
+      }
+
+      &::placeholder {
+        color: $text-muted;
+        font-size: $font-size-sm;
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    select {
+      cursor: pointer;
+      background-color: white;
+    }
+
+    .input-hint {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .result-box {
+    background: $light-color;
+    padding: 1.25rem;
+    border-radius: $border-radius;
+    border-left: 3px solid $secondary-color;
+    margin-top: 1rem;
+
+    h6 {
+      font-size: $font-size-base;
+      font-weight: 600;
+      margin-bottom: 0.875rem;
+      color: $text-primary;
+    }
+
+    .result-content {
+      background: white;
+      padding: 1rem;
+      border-radius: $border-radius-sm;
+      min-height: 80px;
+      white-space: pre-wrap;
+      font-size: $font-size-sm;
+      line-height: 1.6;
+      color: $text-primary;
+      border: 1px solid $border-color;
+    }
+
+    .copy-btn {
+      margin-top: 0.875rem;
+      font-size: $font-size-sm;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+
+    .spinner-border {
+      width: 2.5rem;
+      height: 2.5rem;
+      color: $secondary-color;
+    }
+
+    p {
+      margin-top: 1rem;
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+
+  .card {
+    box-shadow: $box-shadow-sm;
+    border: 1px solid $border-color;
+
+    .card-header {
+      background-color: white;
+      border-bottom: 2px solid $border-color;
+      padding: 1rem 1.25rem;
+
+      h4 {
+        font-size: $h4-font-size;
+        font-weight: 600;
+        margin: 0;
+        color: $text-primary;
+      }
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+  }
+
+  .btn-primary {
+    background: $secondary-color;
+    border-color: $secondary-color;
+    font-weight: 600;
+
+      &:hover {
+        background: #00be8d;
+        border-color: #00be8d;
+      }
+
+    &:disabled {
+      background: $text-muted;
+      border-color: $text-muted;
+    }
+  }
+
+  .alert {
+    font-size: $font-size-sm;
+    padding: 0.75rem 1rem;
+    border-radius: $border-radius-sm;
+  }
+}
+
+// Tool Grid
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+// Back Button
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+// Tablet
+@media (max-width: 992px) {
+  .page-header-wrapper {
+    .page-header {
+      h2 {
+        font-size: $h3-font-size;
+      }
+      
+      p {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+
+  .token-display {
+    .token-card {
+      padding: 0.5rem 1rem;
+
+      .token-icon {
+        font-size: 1.1rem;
+      }
+
+      .token-info {
+        .token-label {
+          font-size: 0.75rem;
+        }
+
+        .token-value {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+}
+
+// Mobile
+@media (max-width: 768px) {
+  .tool-card {
+    .tool-icon {
+      font-size: 1.75rem !important;
+    }
+
+    h5 {
+      font-size: $font-size-base;
+    }
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .etsy-ai-container {
+    .card-body {
+      padding: 1rem;
+    }
+  }
+
+  .page-header-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .token-display {
+      align-self: flex-end;
+    }
+  }
+
+  .token-display {
+    .token-card {
+      padding: 0.4rem 0.8rem;
+
+      .token-icon {
+        font-size: 1rem;
+      }
+
+      .token-info {
+        gap: 0.4rem;
+        
+        .token-label {
+          font-size: 0.7rem;
+        }
+
+        .token-value {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+

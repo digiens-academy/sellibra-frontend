@@ -1,0 +1,128 @@
+@use '../variables' as *;
+
+.module-selection-container {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, $primary-color 0%, #3e5f72 100%);
+  padding: 2rem 0;
+
+  .main-content {
+    max-width: 1200px;
+  }
+
+  .page-header {
+    h1 {
+      font-size: $h1-font-size;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.75rem;
+    }
+
+    .lead {
+      font-size: $font-size-lg;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  .module-card {
+    background: white;
+    border: none;
+    border-radius: $border-radius-lg;
+    transition: all 0.3s ease;
+    box-shadow: $box-shadow;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: $box-shadow-lg;
+    }
+
+    .card-body {
+      padding: 2rem 1.5rem;
+    }
+
+    .module-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: $h3-font-size;
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: $font-size-base;
+      color: $text-secondary;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      padding: $button-padding-y 1.5rem;
+      font-weight: 600;
+      font-size: $font-size-base;
+      border-radius: $border-radius;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .bg-light {
+    background: white !important;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-sm;
+    padding: 1.25rem;
+
+    h6 {
+      font-size: $font-size-base;
+      color: $text-primary;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    ul {
+      color: $text-secondary;
+      font-size: $font-size-sm;
+      
+      li {
+        margin-bottom: 0.375rem;
+      }
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.hover-shadow {
+  transition: box-shadow 0.3s ease;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .module-selection-container {
+    padding: 1.5rem 0;
+
+    .page-header h1 {
+      font-size: $h2-font-size;
+    }
+
+    .module-card .card-body {
+      padding: 1.5rem 1rem;
+    }
+
+    .module-icon {
+      font-size: 2rem !important;
+    }
+  }
+}
+
