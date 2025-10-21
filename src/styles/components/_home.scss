@@ -11,7 +11,7 @@
   background: $primary-color;
   backdrop-filter: blur(10px);
   box-shadow: $box-shadow;
-  z-index: 1000;
+  z-index: 1050; // En yüksek z-index - tüm componentlerin üstünde
   padding: 0.75rem 0;
 
   &-container {
@@ -74,9 +74,11 @@
 .hero-section {
   padding: 6rem 2rem 3rem;
   background: linear-gradient(135deg, $light-color 0%, #E8EDF2 100%);
-  min-height: 100vh;
+  min-height: calc(100vh - 60px); // Fixed navbar yüksekliğini çıkar
   display: flex;
   align-items: center;
+  margin-top: -60px; // Body padding'ini iptal et
+  padding-top: calc(6rem + 60px); // Kendi padding'ini geri ekle
 }
 
 .hero-container {
@@ -157,6 +159,8 @@
   box-shadow: $box-shadow;
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  position: relative;
+  z-index: 1; // Navbar altında kalmasını garanti et
 
   &:hover {
     transform: translateY(-8px);
@@ -255,6 +259,8 @@
   box-shadow: $box-shadow-sm;
   transition: all 0.3s ease;
   border: 2px solid $border-color;
+  position: relative;
+  z-index: 1; // Navbar altında kalmasını garanti et
 
   &:hover {
     transform: translateY(-5px);

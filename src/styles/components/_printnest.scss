@@ -16,7 +16,7 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-    z-index: 1000;
+    z-index: 10; // Navbar (z-index: 1050) altında kalacak
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;

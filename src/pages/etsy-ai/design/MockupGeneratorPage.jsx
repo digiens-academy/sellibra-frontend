@@ -206,14 +206,20 @@ const MockupGeneratorPage = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (mockupResult) {
-      const link = document.createElement('a');
-      link.href = mockupResult.imageUrl;
-      link.download = `mockup-${selectedProduct}-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Base64 görseli direkt indir
+        const link = document.createElement('a');
+        link.href = mockupResult.imageUrl;
+        link.download = `mockup-${selectedProduct}-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Download error:', error);
+        setError('Mockup indirilirken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
     }
   };
 

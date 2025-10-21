@@ -77,5 +77,26 @@ export const aiApi = {
     });
     return response.data;
   },
+
+  // Download Image (CORS workaround)
+  downloadImage: async (imageUrl, filename = 'ai-image.png') => {
+    const response = await axiosInstance.get('/ai/download-image', {
+      params: { url: imageUrl },
+      responseType: 'blob',
+    });
+    
+    // Blob'u indirilebilir link olarak oluştur
+    const blob = new Blob([response.data]);
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    return true;
+  },
 };
 

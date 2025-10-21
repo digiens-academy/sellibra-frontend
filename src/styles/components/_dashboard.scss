@@ -3,7 +3,7 @@
 .dashboard-container {
   .main-content {
     padding: 1.5rem;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 60px); // Fixed navbar yüksekliği
     background-color: $light-color;
   }
 
@@ -32,6 +32,8 @@
     box-shadow: $box-shadow-sm;
     transition: transform 0.2s, box-shadow 0.2s;
     border: 1px solid $border-color;
+    position: relative;
+    z-index: 1; // Navbar altında kalmasını garanti et
 
     &:hover {
       transform: translateY(-3px);
@@ -192,6 +194,11 @@
   background: $primary-color !important;
   box-shadow: $box-shadow;
   padding: 0.75rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050; // En yüksek z-index - tüm componentlerin üstünde
 
   .navbar-brand {
     color: white !important;

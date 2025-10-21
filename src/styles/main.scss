@@ -23,6 +23,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: 60px; // Fixed navbar için boşluk
 }
 
 code {
@@ -124,6 +125,8 @@ h6 { font-size: $h6-font-size; }
   border-radius: $border-radius;
   box-shadow: $box-shadow-sm;
   font-size: $font-size-base;
+  position: relative;
+  z-index: 1; // Navbar (z-index: 1050) altında kalmasını garanti et
   
   .card-body {
     padding: $card-padding;
@@ -160,4 +163,38 @@ h6 { font-size: $h6-font-size; }
 }
 
 // Navbar - Kurumsal (app-navbar class'ı _dashboard.scss'de tanımlı)
+
+// Z-Index Hiyerarşisi
+// Modal ve Dropdown'lar navbar altında kalmamalı
+.modal {
+  z-index: 1055 !important; // Modal navbar'dan yüksek olmalı
+}
+
+.modal-backdrop {
+  z-index: 1054 !important; // Modal backdrop modal'dan düşük
+}
+
+.dropdown-menu {
+  z-index: 1052 !important; // Dropdown navbar'dan yüksek ama modal'dan düşük
+}
+
+.tooltip {
+  z-index: 1051 !important; // Tooltip navbar'dan yüksek ama dropdown'dan düşük
+}
+
+.popover {
+  z-index: 1051 !important; // Popover tooltip ile aynı seviye
+}
+
+// Genel z-index hiyerarşisi:
+// 9999 - Loading spinner (en üstte)
+// 1055 - Modals
+// 1054 - Modal backdrops
+// 1052 - Dropdowns
+// 1051 - Tooltips/Popovers
+// 1050 - Navbar (fixed, tüm sayfa içeriğinin üstünde)
+// 100 - Sidebar
+// 99 - Overlay
+// 10 - Floating buttons
+// 1 - Cards ve diğer içerik componentleri
 
