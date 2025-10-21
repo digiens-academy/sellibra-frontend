@@ -128,14 +128,15 @@ const TextToImagePage = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (generatedImage) {
-      const link = document.createElement('a');
-      link.href = generatedImage;
-      link.download = `tshirt-design-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Backend proxy üzerinden indir (CORS sorunu çözümü)
+        await aiApi.downloadImage(generatedImage, `tshirt-design-${Date.now()}.png`);
+      } catch (error) {
+        console.error('Download error:', error);
+        setError(error.response?.data?.message || 'Görsel indirilirken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
     }
   };
 

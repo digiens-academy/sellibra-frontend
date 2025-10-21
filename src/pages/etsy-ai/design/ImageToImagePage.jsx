@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert, Spinner, ButtonGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { aiApi } from '../../../api/aiApi';
 import TokenDisplay from '../../../components/common/TokenDisplay';
 import useAuthStore from '../../../store/authStore';
@@ -9,7 +9,7 @@ const ImageToImagePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
-  const [operationType, setOperationType] = useState('remove-background');
+  const [operationType, setOperationType] = useState('remove-object');
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,10 +19,10 @@ const ImageToImagePage = () => {
   // İşlem türleri
   const operationTypes = [
     { 
-      value: 'remove-background', 
-      label: '🎯 Nesne Çıkarma',
-      desc: 'Arka planı veya istenmeyen nesneleri kaldır',
-      requiresPrompt: false
+      value: 'remove-object', 
+      label: '🎯 Nesne Kaldırma',
+      desc: 'Tasarımdaki istenmeyen bir nesneyi kaldırın',
+      requiresPrompt: true
     },
     { 
       value: 'style-transfer', 
@@ -38,10 +38,19 @@ const ImageToImagePage = () => {
     },
     { 
       value: 'enhance', 
-      label: '✨ İyileştirme',
-      desc: 'Kaliteyi artır ve detayları geliştir',
-      requiresPrompt: true
+      label: '✨ İyileştirme (300 DPI)',
+      desc: 'Görseli basım kalitesinde 300 DPI\'ya yükselt',
+      requiresPrompt: false
     }
+  ];
+
+  // Nesne kaldırma önerileri
+  const removeObjectPrompts = [
+    'Arka plandaki logoyu kaldır',
+    'Su damgasını/watermark\'ı kaldır',
+    'İstenmeyen metni çıkar',
+    'Arka plandaki kişileri kaldır',
+    'Gereksiz objeleri temizle'
   ];
 
   // Stil önerileri
@@ -62,15 +71,6 @@ const ImageToImagePage = () => {
     'Toprak tonlarına dönüştür',
     'Neon renkler ekle',
     'Soğuk tonlar (mavi, mor) kullan'
-  ];
-
-  // İyileştirme önerileri
-  const enhancePrompts = [
-    'Daha keskin ve net hale getir',
-    'Kontrast ve renk doygunluğunu artır',
-    'Detayları vurgula ve netleştir',
-    'Daha profesyonel ve cilalı bir görünüm ver',
-    'Işık ve gölgeleri iyileştir'
   ];
 
   const handleFileSelect = (event) => {
@@ -117,12 +117,14 @@ const ImageToImagePage = () => {
   const buildEnhancedPrompt = () => {
     let enhancedPrompt = prompt;
 
-    if (operationType === 'style-transfer') {
+    if (operationType === 'remove-object') {
+      enhancedPrompt += ', remove the object cleanly without damaging the rest of the design, maintain quality';
+    } else if (operationType === 'style-transfer') {
       enhancedPrompt += ', maintain the main design elements, t-shirt design style, clean and professional';
     } else if (operationType === 'color-change') {
       enhancedPrompt += ', keep the original design structure, only change colors, t-shirt design';
     } else if (operationType === 'enhance') {
-      enhancedPrompt += ', improve quality while maintaining original design, t-shirt print ready';
+      enhancedPrompt = 'upscale to 300 DPI print quality, enhance sharpness and clarity, maintain original design, professional print ready, high resolution';
     }
 
     return enhancedPrompt;
@@ -146,23 +148,13 @@ const ImageToImagePage = () => {
     setProcessedImage(null);
 
     try {
-      let response;
-
-      if (operationType === 'remove-background') {
-        // Arka plan kaldırma
-        response = await aiApi.removeBackground(selectedFile);
-        setProcessedImage(response.data.image);
-        setTokensFromResponse(response.data.remainingTokens);
-      } else {
-        // Image-to-Image işlemleri
-        const enhancedPrompt = buildEnhancedPrompt();
-        response = await aiApi.imageToImage(selectedFile, enhancedPrompt, {
-          size: '1024x1024'
-        });
-        setProcessedImage(response.data.url);
-        setTokensFromResponse(response.data.remainingTokens);
-      }
-
+      // Image-to-Image işlemleri
+      const enhancedPrompt = buildEnhancedPrompt();
+      const response = await aiApi.imageToImage(selectedFile, enhancedPrompt, {
+        size: '1024x1024'
+      });
+      setProcessedImage(response.data.url);
+      setTokensFromResponse(response.data.remainingTokens);
       setSuccess(true);
     } catch (err) {
       console.error('Image processing error:', err);
@@ -172,14 +164,15 @@ const ImageToImagePage = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (processedImage) {
-      const link = document.createElement('a');
-      link.href = processedImage;
-      link.download = `processed-design-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Backend proxy üzerinden indir (CORS sorunu çözümü)
+        await aiApi.downloadImage(processedImage, `processed-design-${Date.now()}.png`);
+      } catch (error) {
+        console.error('Download error:', error);
+        setError(error.response?.data?.message || 'Görsel indirilirken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
     }
   };
 
@@ -197,12 +190,12 @@ const ImageToImagePage = () => {
 
   const getCurrentPrompts = () => {
     switch (operationType) {
+      case 'remove-object':
+        return removeObjectPrompts;
       case 'style-transfer':
         return stylePrompts;
       case 'color-change':
         return colorPrompts;
-      case 'enhance':
-        return enhancePrompts;
       default:
         return [];
     }
@@ -351,11 +344,20 @@ const ImageToImagePage = () => {
               <Card.Body>
                 <h6 className="mb-2">ℹ️ {currentOperation?.label}</h6>
                 <p className="mb-0 small">{currentOperation?.desc}</p>
-                {operationType === 'remove-background' && (
+                {operationType === 'remove-object' && (
                   <ul className="small mt-2 mb-0">
-                    <li>Arka plan otomatik olarak kaldırılır</li>
-                    <li>Tasarımın kalitesi korunur</li>
-                    <li>Şeffaf PNG olarak çıktı alabilirsiniz</li>
+                    <li>Tasarımdaki istenmeyen bir nesneyi kaldırır</li>
+                    <li>Kaldırmak istediğiniz nesneyi açıkça belirtin</li>
+                    <li>AI, nesneyi temiz bir şekilde çıkarır</li>
+                    <li>Tasarımın geri kalanı korunur</li>
+                  </ul>
+                )}
+                {operationType === 'enhance' && (
+                  <ul className="small mt-2 mb-0">
+                    <li>Görseli 300 DPI basım kalitesine yükseltir</li>
+                    <li>Keskinlik ve netlik artırılır</li>
+                    <li>Profesyonel basım için hazır hale gelir</li>
+                    <li>Orijinal tasarım korunur</li>
                   </ul>
                 )}
               </Card.Body>
@@ -427,24 +429,13 @@ const ImageToImagePage = () => {
                         style={{ width: '100%' }}
                       />
                     </div>
-                    <ButtonGroup className="w-100">
-                      <Button
-                        variant="success"
-                        onClick={handleDownload}
-                      >
-                        ⬇️ İndir
-                      </Button>
-                      <Button
-                        variant="outline-primary"
-                        onClick={() => {
-                          setPreviewUrl(processedImage);
-                          setSelectedFile(null);
-                          setProcessedImage(null);
-                        }}
-                      >
-                        🔄 Bu Görselle Devam Et
-                      </Button>
-                    </ButtonGroup>
+                    <Button
+                      variant="success"
+                      className="w-100"
+                      onClick={handleDownload}
+                    >
+                      ⬇️ İndir
+                    </Button>
                   </>
                 )}
               </Card.Body>
@@ -456,10 +447,10 @@ const ImageToImagePage = () => {
                 <h6 className="mb-3">💡 İpuçları</h6>
                 <ul className="small mb-0">
                   <li className="mb-2">En iyi sonuç için yüksek kaliteli görseller kullanın</li>
-                  <li className="mb-2">Nesne çıkarma işlemi için net görseller seçin</li>
+                  <li className="mb-2">Nesne kaldırma için hangi nesneyi kaldırmak istediğinizi açıkça belirtin</li>
+                  <li className="mb-2">İyileştirme özelliği görseli 300 DPI basım kalitesine çevirir</li>
                   <li className="mb-2">Değişikliklerinizi detaylı açıklayın</li>
-                  <li className="mb-2">Farklı işlem türlerini deneyerek en iyisini bulun</li>
-                  <li className="mb-0">İşlenmiş görseli tekrar yükleyerek zincirleme düzenleme yapabilirsiniz</li>
+                  <li className="mb-0">Farklı işlem türlerini deneyerek en iyisini bulun</li>
                 </ul>
               </Card.Body>
             </Card>

@@ -66,18 +66,23 @@ const RemoveBackgroundPage = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!processedImage) return;
 
-    // Base64'ten blob'a dönüştür
-    const link = document.createElement('a');
-    link.href = processedImage;
-    link.download = `removed-bg-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast.success('Görsel indirildi!');
+    try {
+      // Base64 görseli direkt indir
+      const link = document.createElement('a');
+      link.href = processedImage;
+      link.download = `removed-bg-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success('Görsel indirildi!');
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Görsel indirilirken bir hata oluştu');
+    }
   };
 
   const handleReset = () => {
