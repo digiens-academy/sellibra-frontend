@@ -32,6 +32,24 @@ export const adminApi = {
     return response.data;
   },
 
+  // Update user role
+  updateUserRole: async (userId, role) => {
+    const response = await axiosInstance.put(`/admin/users/${userId}/role`, { role });
+    return response.data;
+  },
+
+  // Update user tokens
+  updateUserTokens: async (userId, dailyTokens) => {
+    const response = await axiosInstance.put(`/admin/users/${userId}/tokens`, { dailyTokens });
+    return response.data;
+  },
+
+  // Reset user tokens
+  resetUserTokens: async (userId) => {
+    const response = await axiosInstance.post(`/admin/users/${userId}/reset-tokens`);
+    return response.data;
+  },
+
   // Get PrintNest sessions
   getPrintNestSessions: async (params = {}) => {
     const { userId, startDate, endDate, page = 1, limit = 20 } = params;

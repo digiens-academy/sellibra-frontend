@@ -20,9 +20,18 @@ const TokenDisplay = () => {
     fetchTokens();
   }, [updateTokens]);
 
+  // Token miktarına göre renk sınıfını belirle
+  const getTokenColorClass = (tokens) => {
+    if (tokens === null) return 'token-default';
+    if (tokens >= 0 && tokens <= 9) return 'token-critical';
+    if (tokens >= 10 && tokens <= 19) return 'token-warning';
+    if (tokens >= 20 && tokens <= 29) return 'token-caution';
+    return 'token-good'; // 30+
+  };
+
   return (
     <div className="token-display">
-      <div className="token-card">
+      <div className={`token-card ${getTokenColorClass(dailyTokens)}`}>
         <FaCoins className="token-icon" />
         <div className="token-info">
           <span className="token-label">Kalan Token:</span>
