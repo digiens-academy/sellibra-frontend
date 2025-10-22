@@ -23,9 +23,9 @@ const LoginPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="logo-container">
+          <Link to={ROUTES.HOME} className="logo-container">
             <img src="/logo-with-sellibra.svg" alt="Sellibra" />
-          </div>
+          </Link>
           <p>PrintNest Tracking Platformuna Hoş Geldiniz</p>
         </div>
 

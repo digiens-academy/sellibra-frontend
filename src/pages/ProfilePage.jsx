@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import { userApi } from '../api/userApi';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -29,6 +31,13 @@ const ProfilePage = () => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handlePhoneChange = (value) => {
+    setFormData({
+      ...formData,
+      phoneNumber: value,
     });
   };
 
@@ -98,16 +107,23 @@ const ProfilePage = () => {
 
                   <Form.Group className="mb-3">
                     <Form.Label>Telefon Numarası</Form.Label>
-                    <Form.Control
-                      type="tel"
-                      name="phoneNumber"
+                    <PhoneInput
+                      country={'tr'}
                       value={formData.phoneNumber}
-                      onChange={handleChange}
-                      placeholder="5XXXXXXXXX"
-                      pattern="[0-9]{10,15}"
+                      onChange={handlePhoneChange}
+                      inputProps={{
+                        name: 'phoneNumber',
+                      }}
+                      containerClass="phone-input-container"
+                      inputClass="form-control"
+                      buttonClass="phone-input-button"
+                      dropdownClass="phone-input-dropdown"
+                      enableSearch={true}
+                      searchPlaceholder="Ülke ara..."
+                      placeholder="5XX XXX XX XX"
                     />
                     <Form.Text className="text-muted">
-                      Sadece rakamlardan oluşmalı (10-15 karakter)
+                      Ülke kodunu seçin ve telefon numaranızı girin
                     </Form.Text>
                   </Form.Group>
 
