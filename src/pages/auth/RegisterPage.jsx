@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import useAuthStore from '../../store/authStore';
 import { ROUTES } from '../../utils/constants';
 
@@ -24,6 +26,13 @@ const RegisterPage = () => {
     });
   };
 
+  const handlePhoneChange = (value) => {
+    setFormData({
+      ...formData,
+      phoneNumber: value,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,9 +46,9 @@ const RegisterPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="logo-container">
+          <Link to={ROUTES.HOME} className="logo-container">
             <img src="/logo-with-sellibra.svg" alt="Sellibra" />
-          </div>
+          </Link>
           <p>Hemen Kayıt Olun</p>
         </div>
 
@@ -91,18 +100,25 @@ const RegisterPage = () => {
 
           <Form.Group className="form-group">
             <Form.Label>Telefon Numarası</Form.Label>
-            <Form.Control
-              type="tel"
-              name="phoneNumber"
-              placeholder="5XXXXXXXXX"
+            <PhoneInput
+              country={'tr'}
               value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-              disabled={loading}
-              pattern="[0-9]{10,15}"
+              onChange={handlePhoneChange}
+              inputProps={{
+                name: 'phoneNumber',
+                required: true,
+                disabled: loading,
+              }}
+              containerClass="phone-input-container"
+              inputClass="form-control"
+              buttonClass="phone-input-button"
+              dropdownClass="phone-input-dropdown"
+              enableSearch={true}
+              searchPlaceholder="Ülke ara..."
+              placeholder="5XX XXX XX XX"
             />
             <Form.Text className="text-muted">
-              Sadece rakamlardan oluşmalı (10-15 karakter)
+              Ülke kodunu seçin ve telefon numaranızı girin
             </Form.Text>
           </Form.Group>
 
