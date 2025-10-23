@@ -61,9 +61,7 @@ const PrintNestIframe = () => {
   };
 
   // Build iframe URL with parameters
-  const iframeUrl = `${PRINTNEST_URL}?ref=digiens&uid=${
-    user?.id
-  }&sid=${sessionId}&t=${Date.now()}`;
+  const iframeUrl = `${PRINTNEST_URL}`;
 
   return (
     <div className="printnest-container">
