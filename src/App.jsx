@@ -14,6 +14,7 @@ import AdminRoute from './components/common/AdminRoute';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import Dashboard from './pages/Dashboard';
 import PrintNestDashboard from './pages/printnest/PrintNestDashboard';
 import PrintNestPage from './pages/PrintNestPage';
@@ -50,6 +51,7 @@ function App() {
           {/* Auth Routes - No Header */}
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
           
           {/* Private Routes - With Header */}
           <Route

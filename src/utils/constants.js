@@ -12,6 +12,7 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  RESET_PASSWORD: '/reset-password/:token',
   DASHBOARD: '/dashboard',
   MODULE_SELECTION: '/modules',
   PRINTNEST: '/printnest',
