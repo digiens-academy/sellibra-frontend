@@ -70,9 +70,15 @@ export const adminApi = {
     return response.data;
   },
 
-  // Manual sync to Google Sheets
+  // Manual sync to Google Sheets (DATABASE -> SHEET)
   syncToSheets: async () => {
     const response = await axiosInstance.post('/admin/sync-to-sheets');
+    return response.data;
+  },
+
+  // Import from Google Sheets to Database (SHEET -> DATABASE)
+  importFromSheets: async () => {
+    const response = await axiosInstance.post('/admin/import-from-sheets');
     return response.data;
   },
 

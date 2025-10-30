@@ -10,6 +10,7 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [search, setSearch] = useState('');
   
   // Pagination states
@@ -73,13 +74,28 @@ const AdminDashboard = () => {
   const handleSyncToSheets = async () => {
     setSyncing(true);
     try {
-      await adminApi.syncToSheets();
-      toast.success('Google Sheets senkronize edildi');
+      const response = await adminApi.syncToSheets();
+      toast.success(response.message || 'Google Sheets senkronize edildi');
+      fetchData(); // Refresh data
     } catch (error) {
       console.error('Sync error:', error);
-      toast.error('Senkronizasyon başarısız');
+      toast.error(error.response?.data?.message || 'Senkronizasyon başarısız');
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const handleImportFromSheets = async () => {
+    setImporting(true);
+    try {
+      const response = await adminApi.importFromSheets();
+      toast.success(response.message || 'Google Sheets\'ten içe aktarma tamamlandı');
+      fetchData(); // Refresh data
+    } catch (error) {
+      console.error('Import error:', error);
+      toast.error(error.response?.data?.message || 'İçe aktarma başarısız');
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -307,14 +323,40 @@ const AdminDashboard = () => {
           <Col>
             <Card>
               <Card.Body>
-                <h5 className="mb-3">İşlemler</h5>
-                <Button
-                  variant="primary"
-                  onClick={handleSyncToSheets}
-                  disabled={syncing}
-                >
-                  {syncing ? 'Senkronize Ediliyor...' : '📊 Google Sheets\'e Senkronize Et'}
-                </Button>
+                <h5 className="mb-3">📊 Google Sheets Senkronizasyonu</h5>
+                <p className="text-muted small mb-3">
+                  <strong>Çift yönlü senkronizasyon:</strong> Database ve Google Sheets arasında kullanıcı verilerini senkronize edin.
+                </p>
+                <div className="d-flex gap-3 flex-wrap">
+                  <div>
+                    <Button
+                      variant="primary"
+                      onClick={handleSyncToSheets}
+                      disabled={syncing || importing}
+                      className="mb-2"
+                    >
+                      {syncing ? 'Senkronize Ediliyor...' : '📤 Database → Sheets'}
+                    </Button>
+                    <div className="text-muted small">
+                      Database'deki yeni kullanıcıları Sheet'e ekler
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Button
+                      variant="success"
+                      onClick={handleImportFromSheets}
+                      disabled={syncing || importing}
+                      className="mb-2"
+                    >
+                      {importing ? 'İçe Aktarılıyor...' : '📥 Sheets → Database'}
+                    </Button>
+                    <div className="text-muted small">
+                      Sheet'teki yeni kullanıcıları Database'e ekler<br />
+                      <em className="text-info">Bu kullanıcılar "Şifremi Unuttum" ile giriş yapabilir</em>
+                    </div>
+                  </div>
+                </div>
               </Card.Body>
             </Card>
           </Col>
