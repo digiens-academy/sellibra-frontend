@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import useAuthStore from '../../store/authStore';
@@ -43,135 +43,179 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <Link to={ROUTES.HOME} className="logo-container">
-            <img src="/logo-with-sellibra.svg" alt="Sellibra" />
-          </Link>
-          <p>Hemen Kayıt Olun</p>
-        </div>
+    <section className="register-section">
+      <Container fluid className="h-100">
+        <Row className="h-100 g-0">
+          {/* Sol Taraf - Görsel/Pattern */}
+          <Col lg={5} className="d-none d-lg-block register-image-col">
+            <div className="register-image-wrapper">
+              <img 
+                src="/59271.jpg" 
+                alt="Register" 
+                className="register-background-image"
+              />
+              <div className="pattern-overlay"></div>
+              <div className="register-image-content">
+                <h2>Sellibra'ya Hoş Geldiniz</h2>
+                <p>E-ticaret yolculuğunuza bugün başlayın</p>
+              </div>
+            </div>
+          </Col>
 
-        {error && (
-          <Alert variant="danger" className="mb-3">
-            {error}
-          </Alert>
-        )}
+          {/* Sağ Taraf - Form */}
+          <Col lg={7} className="d-flex align-items-center justify-content-center">
+            <div className="register-form-container">
+              <div className="text-center mb-4">
+                <img 
+                  src="/59271.jpg" 
+                  alt="Background" 
+                  className="register-logo-background-image"
+                />
+                <div className="register-logo-overlay"></div>
+                <div className="register-logo-content">
+                  <Link to={ROUTES.HOME} className="d-inline-block mb-3">
+                    <img 
+                      src="/logo-with-sellibra.svg" 
+                      alt="Sellibra" 
+                      className="register-logo"
+                    />
+                  </Link>
+                  <h2 className="register-title">Hemen Kayıt Olun</h2>
+                  <p className="register-subtitle">
+                    Formu doldurarak kayıt olabilirsiniz.
+                  </p>
+                </div>
+              </div>
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="form-group">
-            <Form.Label>Ad</Form.Label>
-            <Form.Control
-              type="text"
-              name="firstName"
-              placeholder="Adınız"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </Form.Group>
+              {error && (
+                <Alert variant="danger" className="mb-4">
+                  {error}
+                </Alert>
+              )}
 
-          <Form.Group className="form-group">
-            <Form.Label>Soyad</Form.Label>
-            <Form.Control
-              type="text"
-              name="lastName"
-              placeholder="Soyadınız"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </Form.Group>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">Ad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="firstName"
+                    placeholder="Adınız"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                </Form.Group>
 
-          <Form.Group className="form-group">
-            <Form.Label>E-posta Adresi</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              placeholder="ornek@email.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">Soyad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="lastName"
+                    placeholder="Soyadınız"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                </Form.Group>
 
-          <Form.Group className="form-group">
-            <Form.Label>Telefon Numarası</Form.Label>
-            <PhoneInput
-              country={'tr'}
-              value={formData.phoneNumber}
-              onChange={handlePhoneChange}
-              inputProps={{
-                name: 'phoneNumber',
-                required: true,
-                disabled: loading,
-              }}
-              containerClass="phone-input-container"
-              inputClass="form-control"
-              buttonClass="phone-input-button"
-              dropdownClass="phone-input-dropdown"
-              enableSearch={true}
-              searchPlaceholder="Ülke ara..."
-              placeholder="5XX XXX XX XX"
-            />
-            <Form.Text className="text-muted">
-              Ülke kodunu seçin ve telefon numaranızı girin
-            </Form.Text>
-          </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">E-posta Adresi</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="ornek@email.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                </Form.Group>
 
-          <Form.Group className="form-group">
-            <Form.Label>Etsy Mağaza URL</Form.Label>
-            <Form.Control
-              type="text"
-              name="etsyStoreUrl"
-              placeholder="Etsy URL veya mağaza adı"
-              value={formData.etsyStoreUrl}
-              onChange={handleChange}
-              disabled={loading}
-            />
-            <Form.Text className="text-muted">
-              Etsy mağaza URL'nizi veya sadece mağaza adınızı giriniz.
-            </Form.Text>
-          </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">Telefon Numarası</Form.Label>
+                  <PhoneInput
+                    country={'tr'}
+                    value={formData.phoneNumber}
+                    onChange={handlePhoneChange}
+                    inputProps={{
+                      name: 'phoneNumber',
+                      required: true,
+                      disabled: loading,
+                    }}
+                    containerClass="phone-input-container"
+                    inputClass="form-control"
+                    buttonClass="phone-input-button"
+                    dropdownClass="phone-input-dropdown"
+                    enableSearch={true}
+                    searchPlaceholder="Ülke ara..."
+                    placeholder="5XX XXX XX XX"
+                  />
+                  <Form.Text className="text-muted">
+                    Ülke kodunu seçin ve telefon numaranızı girin
+                  </Form.Text>
+                </Form.Group>
 
-          <Form.Group className="form-group">
-            <Form.Label>Şifre</Form.Label>
-            <Form.Control
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              disabled={loading}
-              minLength={6}
-            />
-            <Form.Text className="text-muted">
-              En az 6 karakter olmalıdır
-            </Form.Text>
-          </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">Etsy Mağaza URL</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="etsyStoreUrl"
+                    placeholder="Etsy URL veya mağaza adı"
+                    value={formData.etsyStoreUrl}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                  <Form.Text className="text-muted">
+                    Etsy mağaza URL'nizi veya sadece mağaza adınızı giriniz.
+                  </Form.Text>
+                </Form.Group>
 
-          <Button
-            variant="primary"
-            type="submit"
-            className="btn-auth"
-            disabled={loading}
-          >
-            {loading ? 'Kayıt Yapılıyor...' : 'Kayıt Ol'}
-          </Button>
-        </Form>
+                <Form.Group className="mb-4">
+                  <Form.Label className="form-label-modern">Şifre</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    minLength={6}
+                    className="form-control-modern"
+                  />
+                  <Form.Text className="text-muted">
+                    En az 6 karakter olmalıdır
+                  </Form.Text>
+                </Form.Group>
 
-        <div className="auth-footer">
-          <p>
-            Zaten hesabınız var mı?{' '}
-            <Link to={ROUTES.LOGIN}>Giriş Yap</Link>
-          </p>
-        </div>
-      </div>
-    </div>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="btn-register-modern w-100"
+                  disabled={loading}
+                  size="lg"
+                >
+                  {loading ? 'Kayıt Yapılıyor...' : 'Kayıt Ol'}
+                </Button>
+
+                <p className="text-center text-muted mt-4 mb-0">
+                  Zaten hesabınız var mı?{' '}
+                  <Link to={ROUTES.LOGIN} className="register-link">
+                    Giriş Yap
+                  </Link>
+                </p>
+              </Form>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </section>
   );
 };
 

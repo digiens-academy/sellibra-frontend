@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Alert, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Alert, Modal } from 'react-bootstrap';
 import useAuthStore from '../../store/authStore';
 import { authApi } from '../../api/authApi';
 import { ROUTES } from '../../utils/constants';
@@ -55,82 +55,113 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <Link to={ROUTES.HOME} className="logo-container">
-            <img src="/logo-with-sellibra.svg" alt="Sellibra" />
-          </Link>
-          <p>PrintNest Tracking Platformuna Hoş Geldiniz</p>
-        </div>
+    <section className="login-section">
+      <Container fluid className="h-100">
+        <Row className="h-100 g-0">
+          {/* Sol Taraf - Form */}
+          <Col lg={7} className="d-flex align-items-center justify-content-center">
+            <div className="login-form-container">
+              <div className="text-center mb-4">
+                <img 
+                  src="/59271.jpg" 
+                  alt="Background" 
+                  className="login-logo-background-image"
+                />
+                <div className="login-logo-overlay"></div>
+                <div className="login-logo-content">
+                  <Link to={ROUTES.HOME} className="d-inline-block mb-3">
+                    <img 
+                      src="/logo-with-sellibra.svg" 
+                      alt="Sellibra" 
+                      className="login-logo"
+                    />
+                  </Link>
+                  <h2 className="login-title">Hoş Geldiniz</h2>
+                  <p className="login-subtitle">
+                    Hesabınıza giriş yapın
+                  </p>
+                </div>
+              </div>
 
-        {error && (
-          <Alert variant="danger" className="mb-3">
-            {error}
-          </Alert>
-        )}
+              {error && (
+                <Alert variant="danger" className="mb-4">
+                  {error}
+                </Alert>
+              )}
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="form-group">
-            <Form.Label>E-posta Adresi</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="ornek@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </Form.Group>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label-modern">E-posta Adresi</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="ornek@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                </Form.Group>
 
-          <Form.Group className="form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <Form.Label style={{ margin: 0 }}>Şifre</Form.Label>
-              <button
-                type="button"
-                onClick={handleOpenForgotModal}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#6366f1',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  padding: 0,
-                  textDecoration: 'none'
-                }}
-                onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-                onMouseOut={(e) => e.target.style.textDecoration = 'none'}
-              >
-                Şifremi Unuttum?
-              </button>
+                <Form.Group className="mb-3">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <Form.Label className="form-label-modern mb-0">Şifre</Form.Label>
+                    <button
+                      type="button"
+                      onClick={handleOpenForgotModal}
+                      className="forgot-password-link"
+                    >
+                      Şifremi Unuttum?
+                    </button>
+                  </div>
+                  <Form.Control
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="form-control-modern"
+                  />
+                </Form.Group>
+
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="btn-login-modern w-100"
+                  disabled={loading}
+                  size="lg"
+                >
+                  {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
+                </Button>
+
+                <p className="text-center text-muted mt-4 mb-0">
+                  Hesabınız yok mu?{' '}
+                  <Link to={ROUTES.REGISTER} className="login-link">
+                    Kayıt Ol
+                  </Link>
+                </p>
+              </Form>
             </div>
-            <Form.Control
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </Form.Group>
+          </Col>
 
-          <Button
-            variant="primary"
-            type="submit"
-            className="btn-auth"
-            disabled={loading}
-          >
-            {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
-          </Button>
-        </Form>
-
-        <div className="auth-footer">
-          <p>
-            Hesabınız yok mu?{' '}
-            <Link to={ROUTES.REGISTER}>Kayıt Ol</Link>
-          </p>
-        </div>
-      </div>
+          {/* Sağ Taraf - Görsel/Pattern */}
+          <Col lg={5} className="d-none d-lg-block login-image-col">
+            <div className="login-image-wrapper">
+              <img 
+                src="/59271.jpg" 
+                alt="Login" 
+                className="login-background-image"
+              />
+              <div className="pattern-overlay"></div>
+              <div className="login-image-content">
+                <h2>Tekrar Hoş Geldiniz!</h2>
+                <p>E-ticaret yolculuğunuza devam edin</p>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
 
       {/* Forgot Password Modal */}
       <Modal show={showForgotModal} onHide={() => setShowForgotModal(false)} centered>
@@ -183,7 +214,7 @@ const LoginPage = () => {
           </Form>
         </Modal.Body>
       </Modal>
-    </div>
+    </section>
   );
 };
 
