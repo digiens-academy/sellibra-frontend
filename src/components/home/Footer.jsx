@@ -16,7 +16,7 @@ const Footer = () => {
             </div>
             <p className="footer-description">
               E-ticaret işletmenizi dijitalleştirin ve büyütün. 
-              PrintNest entegrasyonu ve AI destekli araçlarla işinizi bir üst seviyeye taşıyın.
+              AI destekli araçlarla işinizi bir üst seviyeye taşıyın.
             </p>
           </div>
 
@@ -64,15 +64,11 @@ const Footer = () => {
             <ul className="footer-contact">
               <li>
                 <FaEnvelope className="contact-icon" />
-                <span>info@digiens.com</span>
+                <span>destek@digiensacademy.com</span>
               </li>
               <li>
                 <FaPhone className="contact-icon" />
-                <span>+90 (555) 123 45 67</span>
-              </li>
-              <li>
-                <FaMapMarkerAlt className="contact-icon" />
-                <span>İstanbul, Türkiye</span>
+                <span>+90 (850) 308 25 35</span>
               </li>
             </ul>
           </div>
@@ -83,17 +79,6 @@ const Footer = () => {
           <p className="footer-copyright">
             © {currentYear} Sellibra. Tüm hakları saklıdır.
           </p>
-          <div className="footer-social">
-            <a href="#" className="social-link" aria-label="Twitter">
-              <FaTwitter />
-            </a>
-            <a href="#" className="social-link" aria-label="LinkedIn">
-              <FaLinkedin />
-            </a>
-            <a href="#" className="social-link" aria-label="Instagram">
-              <FaInstagram />
-            </a>
-          </div>
         </div>
       </div>
     </footer>

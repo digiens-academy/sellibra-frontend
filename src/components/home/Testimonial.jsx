@@ -8,7 +8,7 @@ const Testimonial = () => {
       name: 'Ayşe Yılmaz',
       role: 'Etsy Satıcısı',
       avatar: AvatarImages.avatar1,
-      comment: 'DIGIENS sayesinde işlerimi çok daha hızlı ve verimli yönetiyorum. AI araçları gerçekten işimi kolaylaştırdı!',
+      comment: 'Sellibra sayesinde işlerimi çok daha hızlı ve verimli yönetiyorum. AI araçları gerçekten işimi kolaylaştırdı!',
       rating: 5
     },
     {
@@ -16,7 +16,7 @@ const Testimonial = () => {
       name: 'Mehmet Kaya',
       role: 'Print-on-Demand Girişimcisi',
       avatar: AvatarImages.avatar2,
-      comment: 'PrintNest entegrasyonu mükemmel çalışıyor. Siparişlerimi anlık takip edebiliyorum ve müşterilerime daha iyi hizmet veriyorum.',
+      comment: 'Sellibra mükemmel çalışıyor. Tasarımlarımı hızlıca yapabiliyorum ve müşterilerime daha iyi hizmet veriyorum.',
       rating: 5
     },
     {

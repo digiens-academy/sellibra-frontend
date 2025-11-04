@@ -1,6 +1,45 @@
 @use '../variables' as *;
 
 // Home Page Styles
+.home-page {
+  margin-top: -60px; // Body'deki padding-top'u iptal et
+}
+
+// Home Content Container & Grid
+.home-content-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(15px, 3vw, 40px);
+  box-sizing: border-box;
+}
+
+.home-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Her grid item'ı section olarak düzenle
+  > * {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+// Side by Side Section - ProductShowcase ve SellibraFeatures yan yana
+.side-by-side-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  width: 100%;
+  
+  // Tablet için tek sütun
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
 
 // Navbar
 .home-navbar {
@@ -8,9 +47,9 @@
   top: 0;
   left: 0;
   right: 0;
-  background: $primary-color;
+  background: rgba(47, 72, 88, 0.8); // #2F4858 with transparency
   backdrop-filter: blur(10px);
-  box-shadow: $box-shadow;
+  box-shadow: none;
   z-index: 1050; // En yüksek z-index - tüm componentlerin üstünde
   padding: 0.75rem 0;
 
@@ -70,7 +109,104 @@
   }
 }
 
-// Hero Section
+// Hero Section - Yeni Tasarım
+.hero-section-new {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/hero.jpg');
+  background-size: cover;
+  background-position: contain;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding-top: 80px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(47, 72, 88, 0.75); // #2F4858 with 75% opacity
+  z-index: 1;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  width: 100%;
+}
+
+.hero-text-content {
+  text-align: center;
+  color: white;
+}
+
+.hero-main-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.hero-main-description {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+}
+
+.hero-main-description > strong {
+  color: $secondary-color;
+}
+
+.hero-cta-btn {
+  margin-top: 2rem;
+  padding: 1rem 3rem;
+  background: $secondary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 212, 160, 0.4);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.75rem 2rem rgba(0, 212, 160, 0.5);
+    background: #00c491;
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+// Hero Section - Eski
 .hero-section {
   padding: 6rem 2rem 3rem;
   background: linear-gradient(135deg, $light-color 0%, #E8EDF2 100%);
@@ -222,13 +358,18 @@
 
 // Testimonial Section
 .testimonial-section {
-  padding: 4rem 2rem;
+  margin: 0;
+  padding: 4rem 20px;
   background: white;
+  border-radius: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .testimonial-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0;
 }
 
 .testimonial-heading {
@@ -333,6 +474,7 @@
   background: $primary-color;
   color: white;
   padding: 3rem 2rem 1.5rem;
+  margin: 0;
 }
 
 .footer-container {
@@ -483,7 +625,15 @@
   }
 
   .testimonial-section {
-    padding: 3rem 1rem;
+    padding: 3rem 15px;
+  }
+  
+  .home-content-container {
+    padding: 0 20px;
+  }
+  
+  .home-content-grid {
+    gap: clamp(15px, 2vw, 20px);
   }
 
   .home-footer {
@@ -492,6 +642,537 @@
 
   .footer-content {
     gap: 2rem;
+  }
+}
+
+// Etsy Info Section
+.etsy-info-section {
+  margin: 0;
+  padding: 4rem 20px;
+  background: white;
+  border-radius: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.etsy-info-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 600px;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+.etsy-info-image {
+  position: relative;
+  background-image: url('/etsy.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 600px;
+
+  @media (max-width: 768px) {
+    min-height: 400px;
+  }
+}
+
+.etsy-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(253, 152, 116, 0.6); // #FD9874 with transparency
+  z-index: 1;
+}
+
+.etsy-info-content {
+  padding: 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+
+  @media (max-width: 768px) {
+    padding: 3rem 2rem;
+  }
+}
+
+.etsy-info-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 2rem;
+  line-height: 1.3;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.etsy-info-title > strong {
+  color: $secondary-color;
+}
+
+.etsy-info-text {
+  p {
+    font-size: 1.125rem;
+    color: $text-secondary;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Sellibra Features Section - Card Based
+.sellibra-features-section {
+  margin: 0;
+  padding: clamp(3rem, 6vw, 4rem) 20px;
+  background: linear-gradient(135deg, #F4E9D7 0%, #e8dcc8 100%);
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D97D55' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 1;
+    z-index: 0;
+  }
+}
+
+.sellibra-features-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.features-main-title {
+  font-size: clamp(1.8rem, 4vw, 2rem);
+  font-weight: 700;
+  color: $text-primary;
+  text-align: center;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+  line-height: 1.3;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.features-main-title > strong {
+  color: $secondary-color;
+}
+
+.features-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.5rem, 3vw, 2rem);
+  max-width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+.feature-module-card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: $box-shadow;
+  border: 1px solid $border-color;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: visible;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $box-shadow-lg;
+    border-color: $primary-color;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+.module-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.module-logo {
+  width: clamp(100px, 15vw, 120px);
+  height: clamp(40px, 8vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img, svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  svg {
+    fill: $primary-color;
+  }
+}
+
+.module-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.module-description {
+  font-size: 1rem;
+  color: $text-secondary;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+}
+
+.module-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    position: relative;
+
+    &:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: $secondary-color;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Etsy-AI Tools Grid
+.etsy-ai-card {
+  position: relative;
+  z-index: 10;
+  
+  .module-logo {
+    svg {
+      fill: #F1641E;
+    }
+  }
+}
+
+.ai-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  position: relative;
+  z-index: 10;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-tool-item {
+  position: relative;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem);
+  background: $light-color;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 1vw, 0.5rem);
+  z-index: 1;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    background: white;
+    border-color: $accent-color;
+    transform: scale(1.02);
+    z-index: 100;
+  }
+}
+
+.ai-tool-icon {
+  font-size: 1rem;
+  color: $accent-color;
+  flex-shrink: 0;
+}
+
+.ai-tool-name {
+  font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+  font-weight: 500;
+  color: $text-primary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+}
+
+.ai-tool-detail-card {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  border: 2px solid $accent-color;
+  z-index: 1000;
+  animation: slideUp 0.2s ease;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: auto;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    margin: 0;
+    z-index: 10000;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tool-detail-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $accent-color;
+  margin: 0 0 0.5rem 0;
+}
+
+.tool-detail-description {
+  font-size: 0.85rem;
+  color: $text-secondary;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// Platform Integration Cards (in SellibraFeatures)
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(25px, 3vw, 40px);
+  margin-top: 2rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.platform-card {
+  background: white;
+  padding: clamp(30px, 4vw, 40px);
+  border-radius: clamp(20px, 3vw, 25px);
+  box-shadow: 0 4px 20px rgba(217, 125, 85, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--platform-color), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover,
+  &.hovered {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(217, 125, 85, 0.2);
+    border-color: var(--platform-color);
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .platform-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(217, 125, 85, 0.3);
+    }
+  }
+}
+
+.platform-card-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(15px, 2vw, 20px);
+  margin-bottom: 10px;
+}
+
+.platform-logo {
+  width: clamp(60px, 10vw, 80px);
+  height: clamp(40px, 7vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg,
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  svg {
+    fill: var(--platform-color);
+  }
+}
+
+.platform-icon {
+  width: clamp(60px, 10vw, 70px);
+  height: clamp(60px, 10vw, 70px);
+  background: linear-gradient(135deg, var(--platform-color), rgba(var(--platform-color), 0.7));
+  border-radius: clamp(15px, 2vw, 18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  color: white;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(217, 125, 85, 0.2);
+}
+
+.platform-name {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0;
+  text-align: left;
+}
+
+// Responsive adjustments for SellibraFeatures
+@media (max-width: 768px) {
+  .sellibra-features-section {
+    padding: clamp(2rem, 5vw, 3rem) 15px;
+  }
+
+  .platforms-grid {
+    gap: clamp(15px, 3vw, 25px);
+  }
+
+  .product-showcase-section {
+    padding: 60px 15px;
+  }
+
+  .etsy-info-section,
+  .testimonial-section {
+    padding: 3rem 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-content-container {
+    padding: 0 15px;
+  }
+  
+  .home-content-grid {
+    gap: 15px;
+  }
+
+  .sellibra-features-section {
+    padding: 2rem 10px;
+  }
+
+  .product-showcase-section {
+    padding: 40px 10px;
+  }
+
+  .etsy-info-section,
+  .testimonial-section {
+    padding: 2rem 10px;
+  }
+
+  .platform-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .platform-name {
+    text-align: center;
   }
 }
 
