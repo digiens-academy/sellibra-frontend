@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Container, Badge } from 'react-bootstrap';
-import { FaPalette, FaRobot, FaUser, FaSignOutAlt, FaCrown } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaCrown } from 'react-icons/fa';
 import useAuthStore from '../../store/authStore';
 import { ROUTES, USER_ROLES } from '../../utils/constants';
 
@@ -35,7 +35,11 @@ const Header = () => {
                   id="modules-dropdown"
                 >
                   <NavDropdown.Item as={Link} to={ROUTES.PRINTNEST_DASHBOARD} className="d-flex align-items-center gap-2">
-                    <FaPalette style={{ color: '#00D4A0' }} /> PrintNest
+                    <img 
+                      src="/integrations/printnest_logo-BSbxRoeY.svg" 
+                      alt="PrintNest" 
+                      style={{ height: '20px', width: 'auto' }}
+                    /> 
                   </NavDropdown.Item>
                   <NavDropdown.Item 
                     as={Link} 
@@ -43,7 +47,11 @@ const Header = () => {
                     className="d-flex align-items-center gap-2 justify-content-between"
                   >
                     <span className="d-flex align-items-center gap-2">
-                      <FaRobot style={{ color: '#4A90E2' }} /> Etsy-AI Tools
+                      <img 
+                        src="/integrations/etsy.svg" 
+                        alt="Etsy" 
+                        style={{ height: '20px', width: 'auto' }}
+                      /> AI Tools
                     </span>
                     {user?.role !== USER_ROLES.ADMIN && !user?.hasActiveSubscription && (
                       <Badge bg="warning" className="ms-2 d-flex align-items-center gap-1" style={{ fontSize: '0.7rem' }}>

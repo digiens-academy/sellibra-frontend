@@ -45,7 +45,7 @@ export const MODULES = {
   PRINTNEST: {
     id: 'printnest',
     name: 'PrintNest',
-    description: 'PrintNest tracking ve yönetim sistemi',
+    description: 'PrintNest yönetim sistemi',
     Icon: FaPalette,
     iconColor: ICON_COLORS.PRIMARY,
     route: '/printnest/dashboard',

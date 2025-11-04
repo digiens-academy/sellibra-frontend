@@ -54,7 +54,7 @@ const PremiumModal = ({ show, onHide }) => {
           <Button 
             variant="primary" 
             size="lg"
-            onClick={() => window.open('https://digienskampus.com', '_blank')}
+            onClick={() => window.open('https://www.digiensacademy.com/login', '_blank')}
           >
             Premium Ol
           </Button>

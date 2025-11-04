@@ -63,8 +63,12 @@ const Dashboard = () => {
                   style={{ cursor: 'pointer' }}
                 >
                   <Card.Body className="d-flex flex-column align-items-center text-center p-5">
-                    <div className="module-icon mb-4" style={{ fontSize: '5rem' }}>
-                      <MODULES.PRINTNEST.Icon style={{ color: MODULES.PRINTNEST.iconColor }} />
+                    <div className="module-icon mb-4" style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src="/integrations/printnest_logo-BSbxRoeY.svg" 
+                        alt="PrintNest Logo" 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
                     </div>
                     <h3 className="mb-3">{MODULES.PRINTNEST.name}</h3>
                     <p className="text-muted mb-4">
@@ -98,8 +102,12 @@ const Dashboard = () => {
                   )}
                   
                   <Card.Body className="d-flex flex-column align-items-center text-center p-5">
-                    <div className="module-icon mb-4" style={{ fontSize: '5rem' }}>
-                      <MODULES.ETSY_AI.Icon style={{ color: MODULES.ETSY_AI.iconColor }} />
+                    <div className="module-icon mb-4" style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src="/integrations/etsy.svg" 
+                        alt="Etsy Logo" 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
                     </div>
                     <h3 className="mb-3">{MODULES.ETSY_AI.name}</h3>
                     <p className="text-muted mb-4">
