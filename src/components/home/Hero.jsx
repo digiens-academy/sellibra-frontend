@@ -55,7 +55,7 @@ const Hero = () => {
             className="hero-main-description clickable"
             onClick={scrollToSellibraFeatures}
           >
-            Sellibra yapay zeka entegrasyonu ile sizi üst seviyeye taşır.
+            <strong>Sellibra</strong> yapay zeka entegrasyonu ile sizi üst seviyeye taşır.
           </p>
           <button className="hero-cta-btn" onClick={handleGetStarted}>
             Hemen Başlayın
