@@ -87,5 +87,17 @@ export const adminApi = {
     const response = await axiosInstance.get(`/admin/sync-logs?page=${page}&limit=${limit}`);
     return response.data;
   },
+
+  // Get system settings
+  getSettings: async () => {
+    const response = await axiosInstance.get('/admin/settings');
+    return response.data;
+  },
+
+  // Update system setting
+  updateSetting: async (settingKey, settingValue) => {
+    const response = await axiosInstance.put('/admin/settings', { settingKey, settingValue });
+    return response.data;
+  },
 };
 

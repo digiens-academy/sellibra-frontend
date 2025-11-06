@@ -11,7 +11,7 @@ const ProductShowcase = () => {
       id: 1,
       title: 'Minimal Tasarımlar',
       description: 'Sade ve şık minimal tişört tasarımları',
-      image: '/example/1.jpg',
+      image: '/example/2.jpg',
       icon: <FaTshirt />,
       category: 'Minimalist'
     },
@@ -19,7 +19,7 @@ const ProductShowcase = () => {
       id: 2,
       title: 'Sanatsal Desenler',
       description: 'Benzersiz sanatsal tişört koleksiyonları',
-      image: '/example/2.jpg',
+      image: '/example/1.jpg',
       icon: <FaPalette />,
       category: 'Sanatsal'
     },

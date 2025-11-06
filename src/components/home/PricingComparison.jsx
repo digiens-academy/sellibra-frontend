@@ -48,7 +48,7 @@ const PricingComparison = () => {
   };
 
   return (
-    <section className="pricing-comparison">
+    <section id="pricing-comparison" className="pricing-comparison">
       <div className="pricing-comparison__container">
         <div className="pricing-comparison__header">
           <h2 className="pricing-comparison__title">

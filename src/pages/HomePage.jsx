@@ -7,6 +7,7 @@ import SellibraFeatures from "../components/home/SellibraFeatures";
 import PricingComparison from "../components/home/PricingComparison";
 import Testimonial from "../components/home/Testimonial";
 import Footer from "../components/home/Footer";
+import FloatingPriceButton from "../components/home/FloatingPriceButton";
 
 const HomePage = () => {
   useEffect(() => {
@@ -20,14 +21,15 @@ const HomePage = () => {
       <Hero />
       <div className="home-content-container">
         <div className="home-content-grid">
-          <EtsyInfo />
+          <PricingComparison />
           <ProductShowcase />
           <SellibraFeatures />
-          <PricingComparison />
+          <EtsyInfo />
           <Testimonial />
         </div>
       </div>
       <Footer />
+      <FloatingPriceButton />
     </div>
   );
 };

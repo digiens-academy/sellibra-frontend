@@ -50,7 +50,7 @@ const SellibraFeatures = () => {
   ];
 
   return (
-    <section className="sellibra-features-section">
+    <section id="sellibra-features" className="sellibra-features-section">
       <div className="sellibra-features-container">
         <h2 className="features-main-title"><strong>Sellibra</strong> ile Neler Yapabilirsiniz?</h2>
         
