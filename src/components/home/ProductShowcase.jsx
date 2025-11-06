@@ -63,7 +63,7 @@ const ProductShowcase = () => {
     <section className="product-showcase-section">
       <div className="product-showcase-container">
         <div className="showcase-header">
-          <h2 className="showcase-title">Bir Sonraki Çok Satanınız Sizi Bekliyor</h2>
+          <h2 className="showcase-title">Tasarımın Ritmini <span>Sellibra</span> ile Yakala!</h2>
           <p className="showcase-subtitle">
             Kendi tasarımınızı yapın ve kendi markanızı yaratın
           </p>
