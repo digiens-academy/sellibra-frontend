@@ -632,9 +632,6 @@ const AdminDashboard = () => {
                 <Col md={6}>
                   <p><strong>Rol:</strong> {selectedUser.role === 'admin' ? 'Admin' : 'Kullanıcı'}</p>
                   <p><strong>Telefon:</strong> {selectedUser.phoneNumber || '-'}</p>
-                  <p><strong>Etsy Mağaza:</strong> {selectedUser.etsyStoreUrl ? (
-                    <a href={selectedUser.etsyStoreUrl} target="_blank" rel="noopener noreferrer">Link</a>
-                  ) : '-'}</p>
                 </Col>
                 <Col md={6}>
                   <p><strong>Günlük Token:</strong> {selectedUser.dailyTokens || 0}</p>
@@ -642,6 +639,53 @@ const AdminDashboard = () => {
                   <p><strong>Abonelik:</strong> {selectedUser.hasActiveSubscription ? 'Aktif' : 'Pasif'}</p>
                 </Col>
               </Row>
+
+              {/* Etsy Mağazaları */}
+              {selectedUser.etsyStores && selectedUser.etsyStores.length > 0 && (
+                <>
+                  <hr />
+                  <h6>Etsy Mağazaları ({selectedUser.etsyStores.length})</h6>
+                  <Table size="sm" striped bordered>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Mağaza Bilgisi</th>
+                        <th>Oluşturulma Tarihi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedUser.etsyStores.map((store, idx) => (
+                        <tr key={store.id}>
+                          <td>{idx + 1}</td>
+                          <td>
+                            {store.storeName ? (
+                              <>
+                                <strong>{store.storeName}</strong>
+                                <br />
+                                <a href={store.storeUrl} target="_blank" rel="noopener noreferrer" className="text-muted small">
+                                  {store.storeUrl}
+                                </a>
+                              </>
+                            ) : (
+                              <a href={store.storeUrl} target="_blank" rel="noopener noreferrer">
+                                {store.storeUrl}
+                              </a>
+                            )}
+                          </td>
+                          <td>{new Date(store.createdAt).toLocaleDateString('tr-TR')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </>
+              )}
+              
+              {(!selectedUser.etsyStores || selectedUser.etsyStores.length === 0) && (
+                <>
+                  <hr />
+                  <p className="text-muted"><strong>Etsy Mağazaları:</strong> Henüz mağaza eklenmemiş</p>
+                </>
+              )}
 
               <hr />
               
