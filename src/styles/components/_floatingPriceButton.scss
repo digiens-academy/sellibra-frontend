@@ -1,0 +1,111 @@
+@use '../variables' as *;
+
+.floating-price-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  
+  width: 90px;
+  height: 90px;
+  padding: 1rem;
+  border: none;
+  border-radius: 50%;
+  
+  background: linear-gradient(135deg, #DEAA79 0%, #FFE6A9 50%, #B1C29E 100%);
+  color: #2F4858;
+  
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  
+  cursor: pointer;
+  
+  box-shadow: 
+    0 4px 15px rgba(222, 170, 121, 0.4),
+    0 2px 8px rgba(101, 146, 135, 0.3);
+  
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  &.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 
+      0 6px 20px rgba(222, 170, 121, 0.5),
+      0 4px 12px rgba(101, 146, 135, 0.4);
+    
+    background: linear-gradient(135deg, #FFE6A9 0%, #DEAA79 50%, #659287 100%);
+  }
+  
+  &:active {
+    transform: translateY(-2px) scale(1.04);
+  }
+  
+  &__word {
+    display: block;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  }
+  
+  // Pulse animasyonu
+  &.visible::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #DEAA79 0%, #FFE6A9 50%, #B1C29E 100%);
+    opacity: 0;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 0;
+    }
+  }
+  
+  // Responsive
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 80px;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: 0.7rem;
+    gap: 0.1rem;
+  }
+  
+  @media (max-width: 480px) {
+    width: 70px;
+    height: 70px;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.65rem;
+  }
+}
+

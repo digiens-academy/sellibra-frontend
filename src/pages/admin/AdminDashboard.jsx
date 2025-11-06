@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Badge, Form, Modal, Paginatio
 import { adminApi } from '../../api/adminApi';
 import Loader from '../../components/common/Loader';
 import { toast } from 'react-toastify';
-import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync } from 'react-icons/fa';
+import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync, FaCog } from 'react-icons/fa';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -26,9 +26,14 @@ const AdminDashboard = () => {
   const [tokenAmount, setTokenAmount] = useState(0);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  
+  // Settings states
+  const [settings, setSettings] = useState(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   useEffect(() => {
     fetchData();
+    fetchSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage]);
 
@@ -57,6 +62,26 @@ const AdminDashboard = () => {
       toast.error('Veriler yüklenemedi');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await adminApi.getSettings();
+      setSettings(response.data.settings);
+    } catch (error) {
+      console.error('Fetch settings error:', error);
+    }
+  };
+
+  const handleToggleSetting = async (settingKey, currentValue) => {
+    try {
+      await adminApi.updateSetting(settingKey, !currentValue);
+      toast.success('Ayar güncellendi');
+      fetchSettings();
+    } catch (error) {
+      console.error('Update setting error:', error);
+      toast.error('Ayar güncellenemedi');
     }
   };
 
@@ -315,6 +340,52 @@ const AdminDashboard = () => {
               <div className="stats-value">{stats?.todaySessions || 0}</div>
               <div className="stats-label">Bugünkü Oturum</div>
             </div>
+          </Col>
+        </Row>
+
+        {/* System Settings */}
+        <Row className="mb-4">
+          <Col>
+            <Card>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h5 className="mb-0">⚙️ Sistem Ayarları</h5>
+                  <Button 
+                    variant="outline-primary" 
+                    size="sm"
+                    onClick={() => setShowSettingsModal(true)}
+                  >
+                    <FaCog className="me-2" />
+                    Tüm Ayarlar
+                  </Button>
+                </div>
+                
+                {settings && (
+                  <div className="d-flex gap-4 flex-wrap">
+                    {/* PrintNest Default Setting */}
+                    <div className="d-flex align-items-center gap-2">
+                      <Form.Check 
+                        type="switch"
+                        id="default-printnest-switch"
+                        checked={settings.default_printnest_confirmed?.value || false}
+                        onChange={() => handleToggleSetting(
+                          'default_printnest_confirmed', 
+                          settings.default_printnest_confirmed?.value
+                        )}
+                      />
+                      <label htmlFor="default-printnest-switch" style={{ cursor: 'pointer' }}>
+                        <strong>Yeni kullanıcılar varsayılan olarak PrintNest onaylı gelsin</strong>
+                        <div className="text-muted small">
+                          {settings.default_printnest_confirmed?.value ? 
+                            '✅ Aktif - Yeni kullanıcılar otomatik onaylı' : 
+                            '❌ Pasif - Yeni kullanıcılar manuel onay bekleyecek'}
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
 
@@ -707,6 +778,53 @@ const AdminDashboard = () => {
           </Button>
           <Button variant="danger" onClick={handleDeleteUser}>
             Sil
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Settings Modal */}
+      <Modal show={showSettingsModal} onHide={() => setShowSettingsModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>⚙️ Sistem Ayarları</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {settings && (
+            <div>
+              <Table hover>
+                <thead>
+                  <tr>
+                    <th>Ayar</th>
+                    <th>Açıklama</th>
+                    <th>Değer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(settings).map(([key, setting]) => (
+                    <tr key={key}>
+                      <td><strong>{key}</strong></td>
+                      <td className="text-muted small">{setting.description}</td>
+                      <td>
+                        {setting.type === 'boolean' ? (
+                          <Form.Check 
+                            type="switch"
+                            id={`setting-${key}`}
+                            checked={setting.value}
+                            onChange={() => handleToggleSetting(key, setting.value)}
+                          />
+                        ) : (
+                          <span>{setting.value}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSettingsModal(false)}>
+            Kapat
           </Button>
         </Modal.Footer>
       </Modal>
