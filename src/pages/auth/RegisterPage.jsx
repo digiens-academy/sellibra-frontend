@@ -168,6 +168,7 @@ const RegisterPage = () => {
                     placeholder="Etsy URL veya mağaza adı"
                     value={formData.etsyStoreUrl}
                     onChange={handleChange}
+                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
