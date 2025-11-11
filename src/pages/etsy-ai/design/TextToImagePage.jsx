@@ -49,12 +49,12 @@ const TextToImagePage = () => {
 
   // Örnek promptlar
   const examplePrompts = [
-    'Minimalist dağ silueti ile gün batımı',
-    'Vintage tarzda müzik kaseti illüstrasyonu',
-    'Geometrik şekiller ile modern soyut kompozisyon',
-    'Sevimli kedi karakteri ile komik tasarım',
-    'Retro 80\'ler tarzı neon şehir manzarası',
-    'Tipografi: "Stay Wild" yazısı doğa temalı'
+    'Güneş gözlüğü takan sevimli bir kedi',
+    'Bir roket üzerinde sörf yapan astronot',
+    'Dağların üzerinde gün batımı',
+    'Ayakkabı giyen sevimli bir köpek',
+    'Kask takan sevimli sincap',
+    'Typography design, "COFFEE, SLEEP, REPEAT"'
   ];
 
   const handleStyleSelect = (style) => {
@@ -94,7 +94,7 @@ const TextToImagePage = () => {
       fullPrompt += `, using ${colorPalette?.label} color palette`;
     }
     
-    fullPrompt += ',  clean background, high quality, centered composition, perfect for printing';
+    fullPrompt += ',  isolated on a plain white background, high quality';
     
     return fullPrompt;
   };
