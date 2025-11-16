@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import useAuthStore from '../../store/authStore';
@@ -16,7 +16,7 @@ const RegisterPage = () => {
     etsyStoreUrl: '',
   });
 
-  const { register, loading, error } = useAuthStore();
+  const { register, loading } = useAuthStore();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -35,6 +35,7 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const success = await register(formData);
     if (success) {
@@ -87,13 +88,7 @@ const RegisterPage = () => {
                 </div>
               </div>
 
-              {error && (
-                <Alert variant="danger" className="mb-4">
-                  {error}
-                </Alert>
-              )}
-
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} noValidate>
                 <Form.Group className="mb-3">
                   <Form.Label className="form-label-modern">Ad</Form.Label>
                   <Form.Control
@@ -102,7 +97,6 @@ const RegisterPage = () => {
                     placeholder="Adınız"
                     value={formData.firstName}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
@@ -116,7 +110,6 @@ const RegisterPage = () => {
                     placeholder="Soyadınız"
                     value={formData.lastName}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
@@ -130,7 +123,6 @@ const RegisterPage = () => {
                     placeholder="ornek@email.com"
                     value={formData.email}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
@@ -144,7 +136,6 @@ const RegisterPage = () => {
                     onChange={handlePhoneChange}
                     inputProps={{
                       name: 'phoneNumber',
-                      required: true,
                       disabled: loading,
                     }}
                     containerClass="phone-input-container"
@@ -168,7 +159,6 @@ const RegisterPage = () => {
                     placeholder="Etsy URL veya mağaza adı"
                     value={formData.etsyStoreUrl}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
@@ -185,9 +175,7 @@ const RegisterPage = () => {
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handleChange}
-                    required
                     disabled={loading}
-                    minLength={6}
                     className="form-control-modern"
                   />
                   <Form.Text className="text-muted">
