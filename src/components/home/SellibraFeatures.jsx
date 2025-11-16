@@ -23,12 +23,12 @@ const SellibraFeatures = () => {
       name: 'Remove Background',
       description: 'Görsellerin arka planını otomatik olarak kaldırın'
     },
-    {
+    /* {
       id: 'mockup-generator',
       icon: <FaPalette />,
       name: 'Mockup Generator',
       description: 'Profesyonel ürün mockup\'ları saniyeler içinde oluşturun'
-    },
+    }, */
     {
       id: 'title-generator',
       icon: <FaFont />,
