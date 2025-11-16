@@ -32,10 +32,38 @@ const useAuthStore = create((set) => ({
       toast.success(response.message || 'Kayıt başarılı!');
       return true;
     } catch (error) {
+      // Extract error message from response
+      let errorMessage = 'Kayıt işlemi başarısız. Lütfen tekrar deneyin.';
+      
+      if (error.response?.data?.message) {
+        // Single error message
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+        // Validation errors array - show all errors
+        const errorMessages = error.response.data.errors.map(err => err.message).join('\n');
+        errorMessage = errorMessages;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message && !error.message.includes('status code')) {
+        errorMessage = error.message;
+      }
+      
       set({
         loading: false,
-        error: error.response?.data?.message || 'Kayıt başarısız',
+        error: errorMessage,
       });
+      
+      // Toast mesajı ile kullanıcıyı bilgilendir
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: { whiteSpace: 'pre-line' }, // Allow multi-line messages
+      });
+      
       return false;
     }
   },
@@ -61,10 +89,38 @@ const useAuthStore = create((set) => ({
       toast.success(response.message || 'Giriş başarılı!');
       return true;
     } catch (error) {
+      // Extract error message from response
+      let errorMessage = 'Giriş başarısız. Lütfen tekrar deneyin.';
+      
+      if (error.response?.data?.message) {
+        // Single error message
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+        // Validation errors array - show all errors
+        const errorMessages = error.response.data.errors.map(err => err.message).join('\n');
+        errorMessage = errorMessages;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message && !error.message.includes('status code')) {
+        errorMessage = error.message;
+      }
+      
       set({
         loading: false,
-        error: error.response?.data?.message || 'Giriş başarısız',
+        error: errorMessage,
       });
+      
+      // Toast mesajı ile kullanıcıyı bilgilendir
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: { whiteSpace: 'pre-line' }, // Allow multi-line messages
+      });
+      
       return false;
     }
   },

@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      const { status, data } = error.response;
+      const { status } = error.response;
 
       // Unauthorized - clear storage and redirect to login
       if (status === 401) {
@@ -37,13 +37,9 @@ axiosInstance.interceptors.response.use(
         window.location.href = '/login';
         toast.error('Oturum süreniz dolmuş. Lütfen tekrar giriş yapınız.');
       }
-
-      // Show error message
-      if (data && data.message) {
-        toast.error(data.message);
-      }
-    } else {
-      toast.error('Sunucuya bağlanılamadı');
+    } else if (!error.response) {
+      // Network error - no response from server
+      toast.error('Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.');
     }
 
     return Promise.reject(error);

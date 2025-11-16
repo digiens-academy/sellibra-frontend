@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Alert, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Modal, Alert } from 'react-bootstrap';
 import useAuthStore from '../../store/authStore';
 import { authApi } from '../../api/authApi';
 import { ROUTES } from '../../utils/constants';
@@ -13,11 +13,12 @@ const LoginPage = () => {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotMessage, setForgotMessage] = useState('');
   const [forgotError, setForgotError] = useState('');
-  const { login, loading, error } = useAuthStore();
+  const { login, loading } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const success = await login({ email, password });
     if (success) {
@@ -83,13 +84,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {error && (
-                <Alert variant="danger" className="mb-4">
-                  {error}
-                </Alert>
-              )}
-
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} noValidate>
                 <Form.Group className="mb-3">
                   <Form.Label className="form-label-modern">E-posta Adresi</Form.Label>
                   <Form.Control
@@ -97,7 +92,6 @@ const LoginPage = () => {
                     placeholder="ornek@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
@@ -119,7 +113,6 @@ const LoginPage = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    required
                     disabled={loading}
                     className="form-control-modern"
                   />
