@@ -90,14 +90,14 @@ export const MODULES = {
             iconColor: ICON_COLORS.PRIMARY,
             route: '/etsy-ai/design/image-to-image',
           },
-          {
+          /* {
             id: 'mockup-generator',
             name: 'Mockup Oluşturucu',
             description: 'Tasarımını ürün üzerinde görüntüle',
             Icon: FaTshirt,
             iconColor: ICON_COLORS.TERTIARY,
             route: '/etsy-ai/design/mockup-generator',
-          },
+          }, */
         ],
       },
       {
