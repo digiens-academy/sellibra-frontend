@@ -111,7 +111,7 @@ function App() {
             <Route path="design/remove-background" element={<RemoveBackgroundPage />} />
             <Route path="design/text-to-image" element={<TextToImagePage />} />
             <Route path="design/image-to-image" element={<ImageToImagePage />} />
-            <Route path="design/mockup-generator" element={<MockupGeneratorPage />} />
+            {/* <Route path="design/mockup-generator" element={<MockupGeneratorPage />} /> Sonra eklenebilir dursun*/}
             <Route path="description" element={<DescriptionPage />} />
             <Route path="title" element={<TitlePage />} />
             <Route path="profit-calculator" element={<ProfitCalculatorPage />} />
