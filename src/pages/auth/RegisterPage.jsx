@@ -59,6 +59,12 @@ const RegisterPage = () => {
               <div className="register-image-content">
                 <h2>Sellibra'ya Hoş Geldiniz</h2>
                 <p>E-ticaret yolculuğunuza bugün başlayın</p>
+                <div className="mt-4 p-3 bg-warning bg-opacity-10 rounded border border-warning">
+                  <p className="mb-0 small text-warning-emphasis">
+                    <strong>⚠️ Önemli Duyuru:</strong> Etsy Mağaza Bilgilerini Girmeyen Kullanıcıların Dikkatine, 
+                    30 Kasım 2025 tarihine kadar etsy mağaza url bilgisi girilmemiş hesaplar kapatılacaktır.
+                  </p>
+                </div>
               </div>
             </div>
           </Col>
@@ -152,7 +158,9 @@ const RegisterPage = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="form-label-modern">Etsy Mağaza URL</Form.Label>
+                  <Form.Label className="form-label-modern">
+                    Etsy Mağaza URL <span className="text-muted small">(Opsiyonel)</span>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="etsyStoreUrl"
@@ -163,7 +171,7 @@ const RegisterPage = () => {
                     className="form-control-modern"
                   />
                   <Form.Text className="text-muted">
-                    Etsy mağaza URL'nizi veya sadece mağaza adınızı giriniz.
+                    Etsy mağaza URL'nizi veya sadece mağaza adınızı giriniz. 30 Kasım 2025'e kadar girebilirsiniz.
                   </Form.Text>
                 </Form.Group>
 
