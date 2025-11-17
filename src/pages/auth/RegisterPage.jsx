@@ -60,7 +60,7 @@ const RegisterPage = () => {
                 <h2>Sellibra'ya Hoş Geldiniz</h2>
                 <p>E-ticaret yolculuğunuza bugün başlayın</p>
                 <div className="mt-4 p-3 bg-warning bg-opacity-10 rounded border border-warning">
-                  <p className="mb-0 small text-warning-emphasis">
+                  <p className="mb-0 small text-white">
                     <strong>⚠️ Önemli Duyuru:</strong> Etsy Mağaza Bilgilerini Girmeyen Kullanıcıların Dikkatine, 
                     30 Kasım 2025 tarihine kadar etsy mağaza url bilgisi girilmemiş hesaplar kapatılacaktır.
                   </p>
