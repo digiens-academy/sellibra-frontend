@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Table, Badge, Form, Modal, Pagination } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { adminApi } from '../../api/adminApi';
 import Loader from '../../components/common/Loader';
 import { toast } from 'react-toastify';
-import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync, FaCog } from 'react-icons/fa';
+import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync, FaCog, FaBullhorn } from 'react-icons/fa';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -304,8 +306,19 @@ const AdminDashboard = () => {
     <div className="dashboard-container">
       <Container fluid className="main-content">
         <div className="page-header">
-          <h2>🛡️ Admin Panel</h2>
-          <p>Kullanıcı yönetimi ve istatistikler</p>
+          <div className="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+              <h2>🛡️ Admin Panel</h2>
+              <p>Kullanıcı yönetimi ve istatistikler</p>
+            </div>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/admin/announcements')}
+            >
+              <FaBullhorn className="me-2" />
+              Duyuru Yönetimi
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}

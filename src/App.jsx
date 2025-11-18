@@ -9,6 +9,7 @@ import Header from './components/common/Header';
 import PrivateRoute from './components/common/PrivateRoute';
 import PremiumRoute from './components/common/PremiumRoute';
 import AdminRoute from './components/common/AdminRoute';
+import AnnouncementModal from './components/common/AnnouncementModal';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -29,12 +30,13 @@ import TitlePage from './pages/etsy-ai/TitlePage';
 import ProfitCalculatorPage from './pages/etsy-ai/ProfitCalculatorPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AnnouncementManagement from './pages/admin/AnnouncementManagement';
 
 // Constants
 import { ROUTES } from './utils/constants';
 
 function App() {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, user } = useAuthStore();
 
   // Check and update user data on app mount
   useEffect(() => {
@@ -44,6 +46,9 @@ function App() {
   return (
     <Router>
       <div className="App">
+        {/* Announcement Modal - Show only for logged-in users */}
+        {user && <AnnouncementModal />}
+        
         <Routes>
           {/* Home Page - No Header */}
           <Route path={ROUTES.HOME} element={<HomePage />} />
@@ -138,6 +143,18 @@ function App() {
                 <>
                   <Header />
                   <AdminDashboard />
+                </>
+              </AdminRoute>
+            }
+          />
+          
+          <Route
+            path="/admin/announcements"
+            element={
+              <AdminRoute>
+                <>
+                  <Header />
+                  <AnnouncementManagement />
                 </>
               </AdminRoute>
             }
