@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Offcanvas, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaInfoCircle, FaArrowRight, FaCrown } from 'react-icons/fa';
+import { FaInfoCircle, FaArrowRight, FaCrown, FaCheckCircle } from 'react-icons/fa';
 import useAuthStore from '../store/authStore';
 import { MODULES } from '../utils/constants';
 import PremiumModal from '../components/common/PremiumModal';
@@ -10,6 +10,23 @@ const Dashboard = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showOffcanvas, setShowOffcanvas] = useState(true); // Default olarak açık
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  // Header yüksekliğini dinamik olarak al
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      const header = document.querySelector('.app-navbar');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
+    };
+
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, []);
 
   // Debug: Kullanıcı bilgilerini konsola yazdır
   useEffect(() => {
@@ -44,6 +61,28 @@ const Dashboard = () => {
 
   return (
     <div className="module-selection-container">
+      {/* Info Butonu - Offcanvas'ı açmak için */}
+      {!showOffcanvas && headerHeight > 0 && (
+        <Button
+          variant="primary"
+          className="position-fixed d-flex align-items-center gap-2 shadow-lg"
+          style={{
+            top: `${headerHeight + 20}px`,
+            right: '20px',
+            zIndex: 1050,
+            borderRadius: '50px',
+            padding: '12px 24px',
+            fontWeight: '600',
+            backgroundColor: '#157347',
+            borderColor: '#157347'
+          }}
+          onClick={() => setShowOffcanvas(true)}
+        >
+          <FaInfoCircle size={20} />
+          Önemli Bilgi
+        </Button>
+      )}
+
       <Container fluid className="main-content">
         <div className="page-header text-center mb-5">
           <h1>Hoş Geldiniz, {user?.firstName}!</h1>
@@ -142,6 +181,33 @@ const Dashboard = () => {
                         </li>
                       )}
                     </ul>
+
+                    {/* PrintNest Önemli Bilgiler */}
+                    <div className="mt-4 pt-4 border-top">
+                      <h6 className="mb-3 d-flex align-items-center gap-2 text-warning">
+                        <FaInfoCircle style={{ color: '#ffc107' }} /> PrintNest Önemli Bilgiler
+                      </h6>
+                      <ul className="mb-0">
+                        <li className="mb-2">
+                          <strong>Sellibra'ya üye olduğunuz mail</strong> ile PrintNest'e üye olmalısınız.
+                        </li>
+                        <li className="mb-2">
+                          PrintNest'e <strong>kayıt olmadan giriş yapamazsınız</strong>.
+                        </li>
+                        <li>
+                          PrintNest'e Etsy Mağazanızı bağlarken Sellibra içerisinden değil, 
+                          <a 
+                            href="https://printnest.com/admin/settings/integrations" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="fw-bold text-primary ms-1"
+                          >
+                            bu linki yeni sekmede açarak
+                          </a> bağlamalısınız. 
+                          <span className="text-muted fst-italic"> (Yan sekmede Etsy hesabı açık olmalı)</span>
+                        </li>
+                      </ul>
+                    </div>
                   </Card.Body>
                 </Card>
               </Col>
@@ -149,6 +215,76 @@ const Dashboard = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Premium Bilgilendirme Offcanvas */}
+      {headerHeight > 0 && (
+        <Offcanvas 
+          show={showOffcanvas} 
+          onHide={() => setShowOffcanvas(false)}
+          placement="end"
+          backdrop={false}
+          scroll={true}
+          style={{ 
+            width: '400px',
+            maxWidth: '90vw',
+            backgroundColor: 'rgba(33, 82, 95, 0.15)',
+            top: `${headerHeight}px`,
+            height: `calc(100vh - ${headerHeight}px)`,
+            zIndex: 1040
+          }}
+        >
+        <Offcanvas.Header 
+          closeButton 
+          closeVariant="white"
+          className="border-bottom"
+          style={{ 
+            backgroundColor: 'rgba(33, 82, 95, 0.15)',
+            padding: '20px 24px',
+            borderBottomColor: 'rgba(255, 255, 255, 0.2) !important'
+          }}
+        >
+          <Offcanvas.Title className="d-flex align-items-center gap-2 fw-bold" style={{ color: '#fff' }}>
+            <FaCrown style={{ color: '#ffc107' }} size={24} />
+            Premium Bilgilendirme
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body style={{ padding: '24px', backgroundColor: 'rgba(33, 82, 95, 0.15)' }}>
+          {/* Bilgilendirme */}
+          <div 
+            className="p-4 rounded-3 border-start border-4"
+            style={{ 
+              backgroundColor: '#e7f3ff',
+              borderColor: '#0d6efd !important'
+            }}
+          >
+            <div className="d-flex align-items-start gap-3 mb-3">
+              <FaCheckCircle 
+                style={{ 
+                  color: '#0d6efd',
+                  fontSize: '1.5rem',
+                  marginTop: '2px',
+                  flexShrink: 0
+                }} 
+              />
+              <h6 className="mb-0 fw-bold" style={{ color: '#0d6efd' }}>
+                Etsy Yapay Zeka Tool Erişimi
+              </h6>
+            </div>
+            <p className="mb-0" style={{ fontSize: '0.95rem', lineHeight: '1.6', color: '#495057' }}>
+              Premium aboneleri <strong>eğitime kayıt oldukları mail ile Sellibra'ya üye olduklarında</strong> Etsy Yapay Zeka Tool'una erişebileceklerdir.
+            </p>
+          </div>
+
+          {/* Alt Bilgilendirme */}
+          <div className="mt-4 pt-3 border-top">
+            <p className="text-muted small mb-0" style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+              <FaInfoCircle className="me-2" style={{ color: '#6c757d' }} />
+              Premium aboneliğinizin aktif olduğundan ve doğru e-posta adresi ile kayıt olduğunuzdan emin olun.
+            </p>
+          </div>
+        </Offcanvas.Body>
+        </Offcanvas>
+      )}
 
       {/* Premium Modal */}
       <PremiumModal 

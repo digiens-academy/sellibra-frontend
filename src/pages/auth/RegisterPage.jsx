@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Offcanvas } from 'react-bootstrap';
+import { FaInfoCircle, FaCrown, FaCheckCircle } from 'react-icons/fa';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import useAuthStore from '../../store/authStore';
@@ -15,6 +16,8 @@ const RegisterPage = () => {
     password: '',
     etsyStoreUrl: '',
   });
+
+  const [showOffcanvas, setShowOffcanvas] = useState(true); // Default olarak açık
 
   const { register, loading } = useAuthStore();
   const navigate = useNavigate();
@@ -45,6 +48,26 @@ const RegisterPage = () => {
 
   return (
     <section className="register-section">
+      {/* Info Butonu - Offcanvas'ı açmak için */}
+      {!showOffcanvas && (
+        <Button
+          variant="primary"
+          className="position-fixed d-flex align-items-center gap-2 shadow-lg"
+          style={{
+            top: '20px',
+            right: '20px',
+            zIndex: 1050,
+            borderRadius: '50px',
+            padding: '12px 24px',
+            fontWeight: '600'
+          }}
+          onClick={() => setShowOffcanvas(true)}
+        >
+          <FaInfoCircle size={20} />
+          Önemli Bilgi
+        </Button>
+      )}
+
       <Container fluid className="h-100">
         <Row className="h-100 g-0">
           {/* Sol Taraf - Görsel/Pattern */}
@@ -213,6 +236,96 @@ const RegisterPage = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Premium Bilgilendirme Offcanvas */}
+      <Offcanvas 
+        show={showOffcanvas} 
+        onHide={() => setShowOffcanvas(false)}
+        placement="end"
+        backdrop={false}
+        scroll={true}
+        style={{ 
+          width: '400px',
+          backgroundColor: 'rgba(33, 82, 95, 0.15)'
+        }}
+      >
+        <Offcanvas.Header 
+          closeButton 
+          closeVariant="white"
+          className="border-bottom"
+          style={{ 
+            backgroundColor: 'rgba(33, 82, 95, 0.15)',
+            padding: '20px 24px',
+            borderBottomColor: 'rgba(255, 255, 255, 0.2) !important'
+          }}
+        >
+          <Offcanvas.Title className="d-flex align-items-center gap-2 fw-bold" style={{ color: '#fff' }}>
+            <FaCrown style={{ color: '#ffc107' }} size={24} />
+            Premium Bilgilendirme
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body style={{ padding: '24px', backgroundColor: 'rgba(33, 82, 95, 0.15)' }}>
+          {/* İlk Bilgilendirme */}
+          <div 
+            className="mb-4 p-4 rounded-3 border-start border-4"
+            style={{ 
+              backgroundColor: '#e7f3ff',
+              borderColor: '#0d6efd !important'
+            }}
+          >
+            <div className="d-flex align-items-start gap-3 mb-3">
+              <FaCheckCircle 
+                style={{ 
+                  color: '#0d6efd',
+                  fontSize: '1.5rem',
+                  marginTop: '2px',
+                  flexShrink: 0
+                }} 
+              />
+              <h6 className="mb-0 fw-bold" style={{ color: '#0d6efd' }}>
+                Etsy Yapay Zeka Tool Erişimi
+              </h6>
+            </div>
+            <p className="mb-0" style={{ fontSize: '0.95rem', lineHeight: '1.6', color: '#495057' }}>
+              Premium aboneleri <strong>eğitime kayıt oldukları mail ile Sellibra'ya üye olduklarında</strong> Etsy Yapay Zeka Tool'una erişebileceklerdir.
+            </p>
+          </div>
+
+          {/* İkinci Bilgilendirme */}
+          <div 
+            className="p-4 rounded-3 border-start border-4"
+            style={{ 
+              backgroundColor: '#fff3cd',
+              borderColor: '#ffc107 !important'
+            }}
+          >
+            <div className="d-flex align-items-start gap-3 mb-3">
+              <FaCrown 
+                style={{ 
+                  color: '#ffc107',
+                  fontSize: '1.5rem',
+                  marginTop: '2px',
+                  flexShrink: 0
+                }} 
+              />
+              <h6 className="mb-0 fw-bold" style={{ color: '#856404' }}>
+                Premium Abonelik Gereklidir
+              </h6>
+            </div>
+            <p className="mb-0" style={{ fontSize: '0.95rem', lineHeight: '1.6', color: '#495057' }}>
+              Etsy Yapay Zeka Tool'larından faydalanabilmek için <strong>OTÜ Premium aboneliğinizin</strong> olması şarttır.
+            </p>
+          </div>
+
+          {/* Alt Bilgilendirme */}
+          <div className="mt-4 pt-3 border-top">
+            <p className="text-muted small mb-0" style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+              <FaInfoCircle className="me-2" style={{ color: '#6c757d' }} />
+              Kayıt olurken kullandığınız e-posta adresi önemlidir. Lütfen eğitime kayıt olduğunuz mail adresini kullanınız.
+            </p>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
     </section>
   );
 };
