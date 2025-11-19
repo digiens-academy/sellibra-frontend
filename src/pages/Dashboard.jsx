@@ -69,7 +69,7 @@ const Dashboard = () => {
           style={{
             top: `${headerHeight + 20}px`,
             right: '20px',
-            zIndex: 1050,
+            zIndex: 1040,
             borderRadius: '50px',
             padding: '12px 24px',
             fontWeight: '600',
@@ -230,7 +230,7 @@ const Dashboard = () => {
             backgroundColor: 'rgba(33, 82, 95, 0.15)',
             top: `${headerHeight}px`,
             height: `calc(100vh - ${headerHeight}px)`,
-            zIndex: 1040
+            zIndex: 1030
           }}
         >
         <Offcanvas.Header 
