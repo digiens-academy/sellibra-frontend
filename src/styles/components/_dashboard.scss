@@ -289,7 +289,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1050; // En yüksek z-index - tüm componentlerin üstünde
+  z-index: 1060; // En yüksek z-index - tüm componentlerin üstünde
 
   .navbar-brand {
     color: white !important;
@@ -338,6 +338,7 @@
     box-shadow: $box-shadow;
     border: 1px solid $border-color;
     margin-top: 0.5rem;
+    z-index: 1070; // Header'dan da üstte olmalı
 
     .dropdown-item {
       padding: 0.5rem 1rem;
