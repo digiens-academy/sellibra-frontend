@@ -1,11 +1,32 @@
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaInfoCircle } from 'react-icons/fa';
 import useAuthStore from '../../store/authStore';
+import { etsyStoreApi } from '../../api/etsyStoreApi';
 import { ROUTES } from '../../utils/constants';
 
 const PrintNestDashboard = () => {
   const { user } = useAuthStore();
+  const [etsyStores, setEtsyStores] = useState([]);
+  const [loadingStores, setLoadingStores] = useState(true);
+
+  // Load Etsy stores
+  useEffect(() => {
+    loadEtsyStores();
+  }, []);
+
+  const loadEtsyStores = async () => {
+    try {
+      setLoadingStores(true);
+      const response = await etsyStoreApi.getStores();
+      setEtsyStores(response.data.stores);
+    } catch (error) {
+      console.error('Load stores error:', error);
+    } finally {
+      setLoadingStores(false);
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -34,14 +55,33 @@ const PrintNestDashboard = () => {
 
               <div className="mt-3">
                 <p className="text-muted mb-2">
-                  <strong>Etsy Mağaza:</strong>
+                  <strong>Etsy Mağazalarım:</strong>
                 </p>
-                {user?.etsyStoreUrl ? (
-                  <a href={user.etsyStoreUrl} target="_blank" rel="noopener noreferrer" className="text-primary">
-                    {user.etsyStoreUrl}
-                  </a>
+                {loadingStores ? (
+                  <p className="text-muted small">Yükleniyor...</p>
+                ) : etsyStores.length === 0 ? (
+                  <span className="text-muted small">Belirtilmemiş</span>
                 ) : (
-                  <span className="text-muted">Belirtilmemiş</span>
+                  <ListGroup variant="flush" className="mt-2">
+                    {etsyStores.map((store) => (
+                      <ListGroup.Item key={store.id} className="px-0 py-2">
+                        <div>
+                          <strong className="d-block mb-1" style={{ fontSize: '0.9rem' }}>
+                            {store.storeName || 'İsimsiz Mağaza'}
+                          </strong>
+                          <a
+                            href={store.storeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary small"
+                            style={{ fontSize: '0.85rem' }}
+                          >
+                            {store.storeUrl}
+                          </a>
+                        </div>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
                 )}
               </div>
 
