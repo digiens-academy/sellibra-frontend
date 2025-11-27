@@ -7,13 +7,15 @@ import { etsyStoreApi } from '../../api/etsyStoreApi';
 import { ROUTES } from '../../utils/constants';
 
 const PrintNestDashboard = () => {
-  const { user } = useAuthStore();
+  const { user, checkAuth } = useAuthStore();
   const [etsyStores, setEtsyStores] = useState([]);
   const [loadingStores, setLoadingStores] = useState(true);
 
-  // Load Etsy stores
+  // Load Etsy stores and refresh user data
   useEffect(() => {
     loadEtsyStores();
+    // Kullanıcı bilgilerini güncelle (PrintNest onay durumu için)
+    checkAuth();
   }, []);
 
   const loadEtsyStores = async () => {
@@ -47,9 +49,9 @@ const PrintNestDashboard = () => {
                 <h4>{user?.firstName} {user?.lastName}</h4>
                 <p className="text-muted mb-2">{user?.email}</p>
                 {user?.printNestConfirmed ? (
-                  <span className="badge bg-success">PrintNest Onaylı ✓</span>
+                  <span className="badge bg-success">✓ PrintNest İndirimi Onaylı</span>
                 ) : (
-                  <span className="badge bg-warning text-dark">Onay Bekliyor</span>
+                  <span className="badge bg-warning text-dark">⏳ Onay Bekliyor</span>
                 )}
               </div>
 
@@ -210,7 +212,12 @@ const PrintNestDashboard = () => {
                         <li>Etsy mağazanız için profesyonel tasarımlar oluşturun</li>
                         {!user?.printNestConfirmed && (
                           <li className="text-warning">
-                            <strong>PrintNest erişiminizin aktif olması için admin onayı bekleniyor</strong>
+                            <strong>PrintNest indiriminizin aktif olması için onay bekleniyor. Sistem her 5 dakikada bir otomatik kontrol yapmaktadır.</strong>
+                          </li>
+                        )}
+                        {user?.printNestConfirmed && (
+                          <li className="text-success">
+                            <strong>✓ PrintNest indiriminiz aktif! Artık PrintNest'i indirimli olarak kullanabilirsiniz.</strong>
                           </li>
                         )}
                       </ul>
