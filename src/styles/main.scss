@@ -167,32 +167,32 @@ h6 { font-size: $h6-font-size; }
 // Z-Index Hiyerarşisi
 // Modal ve Dropdown'lar navbar altında kalmamalı
 .modal {
-  z-index: 1055 !important; // Modal navbar'dan yüksek olmalı
+  z-index: 1080 !important; // Modal her zaman en üstte (navbar: 1060)
 }
 
 .modal-backdrop {
-  z-index: 1054 !important; // Modal backdrop modal'dan düşük
+  z-index: 1070 !important; // Modal backdrop modal'dan düşük ama navbar'dan yüksek
 }
 
 .dropdown-menu {
-  z-index: 1052 !important; // Dropdown navbar'dan yüksek ama modal'dan düşük
+  z-index: 1065 !important; // Dropdown navbar'dan (1060) yüksek ama modal'dan düşük
 }
 
 .tooltip {
-  z-index: 1051 !important; // Tooltip navbar'dan yüksek ama dropdown'dan düşük
+  z-index: 1061 !important; // Tooltip navbar'dan hemen sonra
 }
 
 .popover {
-  z-index: 1051 !important; // Popover tooltip ile aynı seviye
+  z-index: 1061 !important; // Popover tooltip ile aynı seviye
 }
 
 // Genel z-index hiyerarşisi:
 // 9999 - Loading spinner (en üstte)
-// 1055 - Modals
-// 1054 - Modal backdrops
-// 1052 - Dropdowns
-// 1051 - Tooltips/Popovers
-// 1050 - Navbar (fixed, tüm sayfa içeriğinin üstünde)
+// 1080 - Modals (en yüksek - her zaman görünür)
+// 1070 - Modal backdrops
+// 1065 - Dropdowns (navbar'dan yüksek)
+// 1061 - Tooltips/Popovers (navbar'dan hemen sonra)
+// 1060 - Navbar (fixed, tüm sayfa içeriğinin üstünde)
 // 100 - Sidebar
 // 99 - Overlay
 // 10 - Floating buttons

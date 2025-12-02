@@ -5,6 +5,9 @@ import { FaInfoCircle, FaArrowRight, FaCrown, FaCheckCircle } from 'react-icons/
 import useAuthStore from '../store/authStore';
 import { MODULES } from '../utils/constants';
 import PremiumModal from '../components/common/PremiumModal';
+import AnnouncementModal from '../components/common/AnnouncementModal';
+import { getActiveAnnouncements } from '../api/announcementApi';
+import { toast } from 'react-toastify';
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -12,6 +15,8 @@ const Dashboard = () => {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(true); // Default olarak açık
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [announcements, setAnnouncements] = useState([]);
 
   // Header yüksekliğini dinamik olarak al
   useEffect(() => {
@@ -37,6 +42,24 @@ const Dashboard = () => {
       subscriptionCheckedAt: user?.subscriptionCheckedAt
     });
   }, [user]);
+
+  // Aktif duyuruları yükle
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await getActiveAnnouncements();
+        if (response.success && response.data.announcements.length > 0) {
+          setAnnouncements(response.data.announcements);
+          setShowAnnouncementModal(true);
+        }
+      } catch (error) {
+        console.error('Duyurular yüklenirken hata:', error);
+        // Hata gösterme - kullanıcıyı rahatsız etmeyelim
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
 
   const handleModuleClick = (moduleId, moduleRoute) => {
     // Etsy-AI modülüne tıklanırsa premium kontrolü yap
@@ -93,6 +116,39 @@ const Dashboard = () => {
 
         <Row className="justify-content-center">
           <Col lg={10} xl={8}>
+            {/* Admin/Support Panel Card */}
+            {(user?.role === 'admin' || user?.role === 'support') && (
+              <Row className="mb-4">
+                <Col>
+                  <Card className="border-primary shadow-sm">
+                    <Card.Body className="p-4">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 className="mb-2">
+                            {user?.role === 'admin' ? '🛡️ Admin Panel' : '🛟 Destek Paneli'}
+                          </h5>
+                          <p className="text-muted mb-0">
+                            {user?.role === 'admin' 
+                              ? 'Kullanıcı yönetimi, bildirimler ve sistem ayarları'
+                              : 'Kullanıcı görüntüleme ve bildirim yönetimi'}
+                          </p>
+                        </div>
+                        <Button
+                          variant="primary"
+                          size="lg"
+                          onClick={() => navigate(user?.role === 'admin' ? '/admin' : '/support')}
+                          className="d-flex align-items-center gap-2"
+                        >
+                          {user?.role === 'admin' ? 'Panele Git' : 'Panele Git'}
+                          <FaArrowRight />
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            )}
+
             <Row className="g-4">
               {/* PrintNest Modülü */}
               <Col md={6}>
@@ -290,6 +346,13 @@ const Dashboard = () => {
       <PremiumModal 
         show={showPremiumModal}
         onHide={() => setShowPremiumModal(false)}
+      />
+
+      {/* Announcement Modal */}
+      <AnnouncementModal 
+        show={showAnnouncementModal}
+        onHide={() => setShowAnnouncementModal(false)}
+        announcements={announcements}
       />
     </div>
   );

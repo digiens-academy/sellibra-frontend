@@ -31,6 +31,8 @@ export const ROUTES = {
   ADMIN: '/admin',
   ADMIN_USERS: '/admin/users',
   ADMIN_SESSIONS: '/admin/sessions',
+  ADMIN_ANNOUNCEMENTS: '/admin/announcements',
+  SUPPORT: '/support',
 };
 
 // Icon'lar için metadata
@@ -131,5 +133,6 @@ export const MODULES = {
 export const USER_ROLES = {
   USER: 'user',
   ADMIN: 'admin',
+  SUPPORT: 'support',
 };
 

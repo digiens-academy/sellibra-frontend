@@ -3,9 +3,12 @@ import { Container, Row, Col, Card, Button, Table, Badge, Form, Modal, Paginatio
 import { adminApi } from '../../api/adminApi';
 import Loader from '../../components/common/Loader';
 import { toast } from 'react-toastify';
-import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync, FaCog } from 'react-icons/fa';
+import { FaEye, FaUserShield, FaUser, FaCoins, FaTrash, FaSync, FaCog, FaBullhorn, FaInfoCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../utils/constants';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +29,7 @@ const AdminDashboard = () => {
   const [tokenAmount, setTokenAmount] = useState(0);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [showRoleModal, setShowRoleModal] = useState(false);
   
   // Settings states
   const [settings, setSettings] = useState(null);
@@ -178,11 +182,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleToggleRole = async (userId, currentRole) => {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+  const handleOpenRoleModal = (user) => {
+    setSelectedUser(user);
+    setShowRoleModal(true);
+  };
+
+  const handleUpdateRole = async (newRole) => {
     try {
-      await adminApi.updateUserRole(userId, newRole);
-      toast.success(`Kullanıcı rolü ${newRole === 'admin' ? 'Admin' : 'Kullanıcı'} olarak güncellendi`);
+      await adminApi.updateUserRole(selectedUser.id, newRole);
+      const roleNames = {
+        admin: 'Admin',
+        user: 'Kullanıcı',
+        support: 'Destek'
+      };
+      toast.success(`Kullanıcı rolü ${roleNames[newRole]} olarak güncellendi`);
+      setShowRoleModal(false);
       fetchData();
     } catch (error) {
       console.error('Role update error:', error);
@@ -303,9 +317,21 @@ const AdminDashboard = () => {
   return (
     <div className="dashboard-container">
       <Container fluid className="main-content">
-        <div className="page-header">
-          <h2>🛡️ Admin Panel</h2>
-          <p>Kullanıcı yönetimi ve istatistikler</p>
+        <div className="page-header mb-4">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2>🛡️ Admin Panel</h2>
+              <p className="mb-0">Kullanıcı yönetimi ve istatistikler</p>
+            </div>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate(ROUTES.ADMIN_ANNOUNCEMENTS)}
+              className="d-flex align-items-center gap-2"
+            >
+              <FaBullhorn />
+              Bildirim Yönetimi
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -518,8 +544,14 @@ const AdminDashboard = () => {
                             </td>
                             <td>{user.email}</td>
                             <td>
-                              <Badge bg={user.role === 'admin' ? 'primary' : 'secondary'}>
-                                {user.role === 'admin' ? 'Admin' : 'Kullanıcı'}
+                              <Badge bg={
+                                user.role === 'admin' ? 'primary' : 
+                                user.role === 'support' ? 'info' : 
+                                'secondary'
+                              }>
+                                {user.role === 'admin' ? 'Admin' : 
+                                 user.role === 'support' ? 'Destek' : 
+                                 'Kullanıcı'}
                               </Badge>
                             </td>
                             <td>
@@ -549,11 +581,11 @@ const AdminDashboard = () => {
                                 {!user.isSuperAdmin && (
                                   <Button
                                     size="sm"
-                                    variant={user.role === 'admin' ? 'secondary' : 'primary'}
-                                    onClick={() => handleToggleRole(user.id, user.role)}
-                                    title={user.role === 'admin' ? 'Kullanıcı Yap' : 'Admin Yap'}
+                                    variant="primary"
+                                    onClick={() => handleOpenRoleModal(user)}
+                                    title="Rol Değiştir"
                                   >
-                                    {user.role === 'admin' ? <FaUser /> : <FaUserShield />}
+                                    <FaUserShield />
                                   </Button>
                                 )}
 
@@ -630,7 +662,17 @@ const AdminDashboard = () => {
               
               <Row>
                 <Col md={6}>
-                  <p><strong>Rol:</strong> {selectedUser.role === 'admin' ? 'Admin' : 'Kullanıcı'}</p>
+                  <p><strong>Rol:</strong>{' '}
+                    <Badge bg={
+                      selectedUser.role === 'admin' ? 'primary' : 
+                      selectedUser.role === 'support' ? 'info' : 
+                      'secondary'
+                    }>
+                      {selectedUser.role === 'admin' ? 'Admin' : 
+                       selectedUser.role === 'support' ? 'Destek' : 
+                       'Kullanıcı'}
+                    </Badge>
+                  </p>
                   <p><strong>Telefon:</strong> {selectedUser.phoneNumber || '-'}</p>
                 </Col>
                 <Col md={6}>
@@ -796,6 +838,90 @@ const AdminDashboard = () => {
           </Button>
           <Button variant="primary" onClick={handleUpdateTokens}>
             Kaydet
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Role Change Modal */}
+      <Modal show={showRoleModal} onHide={() => setShowRoleModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Kullanıcı Rolü Değiştir</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedUser && (
+            <div>
+              <p>
+                <strong>Kullanıcı:</strong> {selectedUser.firstName} {selectedUser.lastName}
+                <br />
+                <strong>E-posta:</strong> {selectedUser.email}
+                <br />
+                <strong>Mevcut Rol:</strong>{' '}
+                <Badge bg={
+                  selectedUser.role === 'admin' ? 'primary' : 
+                  selectedUser.role === 'support' ? 'info' : 
+                  'secondary'
+                }>
+                  {selectedUser.role === 'admin' ? 'Admin' : 
+                   selectedUser.role === 'support' ? 'Destek' : 
+                   'Kullanıcı'}
+                </Badge>
+              </p>
+              
+              <hr />
+              
+              <p className="mb-3"><strong>Yeni rol seçin:</strong></p>
+              
+              <div className="d-grid gap-2">
+                <Button
+                  variant={selectedUser.role === 'user' ? 'secondary' : 'outline-secondary'}
+                  size="lg"
+                  onClick={() => handleUpdateRole('user')}
+                  disabled={selectedUser.role === 'user'}
+                >
+                  <FaUser className="me-2" />
+                  Kullanıcı
+                  {selectedUser.role === 'user' && ' (Mevcut)'}
+                </Button>
+                
+                <Button
+                  variant={selectedUser.role === 'support' ? 'info' : 'outline-info'}
+                  size="lg"
+                  onClick={() => handleUpdateRole('support')}
+                  disabled={selectedUser.role === 'support'}
+                >
+                  <FaUserShield className="me-2" />
+                  Destek
+                  {selectedUser.role === 'support' && ' (Mevcut)'}
+                  <div className="small text-muted">
+                    Kullanıcıları görüntüleyebilir, bildirim oluşturabilir
+                  </div>
+                </Button>
+                
+                <Button
+                  variant={selectedUser.role === 'admin' ? 'primary' : 'outline-primary'}
+                  size="lg"
+                  onClick={() => handleUpdateRole('admin')}
+                  disabled={selectedUser.role === 'admin'}
+                >
+                  <FaUserShield className="me-2" />
+                  Admin
+                  {selectedUser.role === 'admin' && ' (Mevcut)'}
+                  <div className="small text-muted">
+                    Tam yetki - tüm özelliklere erişim
+                  </div>
+                </Button>
+              </div>
+              
+              <div className="alert alert-info mt-3 mb-0 small">
+                <FaInfoCircle className="me-2" />
+                <strong>Not:</strong> Rol değişiklikleri anında uygulanır. Kullanıcı tekrar giriş yapması gerekmez.
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRoleModal(false)}>
+            İptal
           </Button>
         </Modal.Footer>
       </Modal>
