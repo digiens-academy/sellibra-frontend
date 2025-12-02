@@ -71,10 +71,16 @@ const Header = () => {
                   </NavDropdown.Item>
 
                   {user?.role === USER_ROLES.ADMIN && (
-                  <NavDropdown.Item as={Link} to={ROUTES.ADMIN}>
-                    Admin Panel
-                  </NavDropdown.Item>
-                )}
+                    <NavDropdown.Item as={Link} to={ROUTES.ADMIN}>
+                      🛡️ Admin Panel
+                    </NavDropdown.Item>
+                  )}
+
+                  {user?.role === USER_ROLES.SUPPORT && (
+                    <NavDropdown.Item as={Link} to={ROUTES.SUPPORT}>
+                      🛟 Destek Paneli
+                    </NavDropdown.Item>
+                  )}
                   
                   <NavDropdown.Divider />
                   

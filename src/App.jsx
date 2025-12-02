@@ -9,6 +9,7 @@ import Header from './components/common/Header';
 import PrivateRoute from './components/common/PrivateRoute';
 import PremiumRoute from './components/common/PremiumRoute';
 import AdminRoute from './components/common/AdminRoute';
+import AdminOrSupportRoute from './components/common/AdminOrSupportRoute';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -29,6 +30,8 @@ import TitlePage from './pages/etsy-ai/TitlePage';
 import ProfitCalculatorPage from './pages/etsy-ai/ProfitCalculatorPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AnnouncementsManagement from './pages/admin/AnnouncementsManagement';
+import SupportDashboard from './pages/support/SupportDashboard';
 
 // Constants
 import { ROUTES } from './utils/constants';
@@ -140,6 +143,31 @@ function App() {
                   <AdminDashboard />
                 </>
               </AdminRoute>
+            }
+          />
+          
+          {/* Admin or Support Routes */}
+          <Route
+            path={ROUTES.ADMIN_ANNOUNCEMENTS}
+            element={
+              <AdminOrSupportRoute>
+                <>
+                  <Header />
+                  <AnnouncementsManagement />
+                </>
+              </AdminOrSupportRoute>
+            }
+          />
+          
+          <Route
+            path={ROUTES.SUPPORT}
+            element={
+              <AdminOrSupportRoute>
+                <>
+                  <Header />
+                  <SupportDashboard />
+                </>
+              </AdminOrSupportRoute>
             }
           />
           

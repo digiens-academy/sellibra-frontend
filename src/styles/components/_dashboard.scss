@@ -338,7 +338,7 @@
     box-shadow: $box-shadow;
     border: 1px solid $border-color;
     margin-top: 0.5rem;
-    z-index: 1070; // Header'dan da üstte olmalı
+    // z-index main.scss'de global olarak tanımlı (1065)
 
     .dropdown-item {
       padding: 0.5rem 1rem;
