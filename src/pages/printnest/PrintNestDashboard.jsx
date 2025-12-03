@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, ListGroup, Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaInfoCircle } from 'react-icons/fa';
+import { FaEnvelope, FaInfoCircle, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
 import useAuthStore from '../../store/authStore';
 import { etsyStoreApi } from '../../api/etsyStoreApi';
 import { ROUTES } from '../../utils/constants';
@@ -37,6 +37,109 @@ const PrintNestDashboard = () => {
           <h2>🎨 PrintNest Dashboard</h2>
           <p>PrintNest tracking ve yönetim sistemi</p>
         </div>
+
+        {/* Email Uyarı Slider */}
+        <Row className="mb-4">
+          <Col>
+            <Carousel 
+              interval={5000} 
+              pause="hover"
+              indicators={true}
+              controls={true}
+              style={{
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {/* Slide 1 - Email Uyarısı */}
+              <Carousel.Item>
+                <div 
+                  style={{
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    padding: '40px 30px',
+                    minHeight: '180px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div className="text-center text-white">
+                    <FaEnvelope size={40} className="mb-3" style={{ opacity: 0.9 }} />
+                    <h4 className="fw-bold mb-2">Kayıtlı E-posta Adresiniz</h4>
+                    <p className="mb-2" style={{ fontSize: '1.3rem', fontWeight: '600' }}>
+                      {user?.email}
+                    </p>
+                    <p className="mb-0" style={{ fontSize: '0.95rem', opacity: 0.9 }}>
+                      PrintNest'e bu e-posta adresi ile üye olmalısınız
+                    </p>
+                  </div>
+                </div>
+              </Carousel.Item>
+
+              {/* Slide 2 - Önemli Uyarı */}
+              <Carousel.Item>
+                <div 
+                  style={{
+                    background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    padding: '40px 30px',
+                    minHeight: '180px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div className="text-center text-white">
+                    <FaExclamationTriangle size={40} className="mb-3" style={{ opacity: 0.9 }} />
+                    <h4 className="fw-bold mb-3">⚠️ Dikkat!</h4>
+                    <p className="mb-0" style={{ fontSize: '1.05rem', lineHeight: '1.6', maxWidth: '700px', margin: '0 auto' }}>
+                      Farklı e-posta adresi kullanmanız durumunda <strong>PrintNest indirimi tanımlanamaz</strong> ve 
+                      <strong> Etsy mağaza entegrasyonu sorun yaşayabilir</strong>.
+                    </p>
+                  </div>
+                </div>
+              </Carousel.Item>
+
+              {/* Slide 3 - Etsy Mağazalar */}
+              <Carousel.Item>
+                <div 
+                  style={{
+                    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    padding: '40px 30px',
+                    minHeight: '180px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div className="text-center text-white">
+                    <FaCheckCircle size={40} className="mb-3" style={{ opacity: 0.9 }} />
+                    <h4 className="fw-bold mb-3">Etsy Mağazalarınız</h4>
+                    {etsyStores.length > 0 ? (
+                      <>
+                        <p className="mb-2" style={{ fontSize: '1.05rem' }}>
+                          PrintNest'te de aynı mağazaları kullanmalısınız:
+                        </p>
+                        <div style={{ fontSize: '1.1rem', fontWeight: '600' }}>
+                          {etsyStores.map((store, index) => (
+                            <div key={store.id}>
+                              {store.storeName || store.storeUrl}
+                              {index < etsyStores.length - 1 && ', '}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="mb-0" style={{ fontSize: '1.05rem' }}>
+                        Henüz Etsy mağazası eklenmemiş. Lütfen profilinizden ekleyiniz.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </Carousel.Item>
+            </Carousel>
+          </Col>
+        </Row>
 
         <Row>
           {/* User Info */}
