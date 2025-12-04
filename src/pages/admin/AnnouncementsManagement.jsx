@@ -38,7 +38,13 @@ const AnnouncementsManagement = () => {
     type: 'info',
     startDate: '',
     endDate: '',
-    isActive: true
+    isActive: true,
+    // Hedef kitle özellikleri
+    targetEveryone: true,
+    targetRoles: [],
+    targetSubscriptionType: 'all', // 'all', 'premium', 'non-premium'
+    targetPrintNestStatus: 'all', // 'all', 'pending', 'confirmed'
+    targetStoreStatus: 'all' // 'all', 'has-store', 'no-store'
   });
 
   useEffect(() => {
@@ -69,7 +75,12 @@ const AnnouncementsManagement = () => {
       type: 'info',
       startDate: new Date().toISOString().slice(0, 16),
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-      isActive: true
+      isActive: true,
+      targetEveryone: true,
+      targetRoles: [],
+      targetSubscriptionType: 'all',
+      targetPrintNestStatus: 'all',
+      targetStoreStatus: 'all'
     });
     setShowModal(true);
   };
@@ -77,13 +88,26 @@ const AnnouncementsManagement = () => {
   const handleOpenEditModal = (announcement) => {
     setModalMode('edit');
     setCurrentAnnouncement(announcement);
+    
+    // targetAudience'i parse et
+    const target = announcement.targetAudience || {};
+    const hasTarget = !!announcement.targetAudience;
+    
     setFormData({
       title: announcement.title,
       message: announcement.message,
       type: announcement.type,
       startDate: new Date(announcement.startDate).toISOString().slice(0, 16),
       endDate: new Date(announcement.endDate).toISOString().slice(0, 16),
-      isActive: announcement.isActive
+      isActive: announcement.isActive,
+      targetEveryone: !hasTarget,
+      targetRoles: target.roles || [],
+      targetSubscriptionType: target.hasActiveSubscription === true ? 'premium' : 
+                              target.hasActiveSubscription === false ? 'non-premium' : 'all',
+      targetPrintNestStatus: target.printNestConfirmed === false ? 'pending' :
+                             target.printNestConfirmed === true ? 'confirmed' : 'all',
+      targetStoreStatus: target.hasEtsyStore === true ? 'has-store' :
+                        target.hasEtsyStore === false ? 'no-store' : 'all'
     });
     setShowModal(true);
   };
@@ -97,7 +121,12 @@ const AnnouncementsManagement = () => {
       type: 'info',
       startDate: '',
       endDate: '',
-      isActive: true
+      isActive: true,
+      targetEveryone: true,
+      targetRoles: [],
+      targetSubscriptionType: 'all',
+      targetPrintNestStatus: 'all',
+      targetStoreStatus: 'all'
     });
   };
 
@@ -109,15 +138,73 @@ const AnnouncementsManagement = () => {
     }));
   };
 
+  const handleRoleToggle = (role) => {
+    setFormData(prev => {
+      const roles = prev.targetRoles;
+      const newRoles = roles.includes(role)
+        ? roles.filter(r => r !== role)
+        : [...roles, role];
+      return { ...prev, targetRoles: newRoles };
+    });
+  };
+
+  const buildTargetAudience = () => {
+    // Eğer herkese gösterilecekse null döndür
+    if (formData.targetEveryone) {
+      return null;
+    }
+
+    const targetAudience = {};
+
+    // Roller
+    if (formData.targetRoles.length > 0) {
+      targetAudience.roles = formData.targetRoles;
+    }
+
+    // Premium üyelik
+    if (formData.targetSubscriptionType === 'premium') {
+      targetAudience.hasActiveSubscription = true;
+    } else if (formData.targetSubscriptionType === 'non-premium') {
+      targetAudience.hasActiveSubscription = false;
+    }
+
+    // PrintNest durumu
+    if (formData.targetPrintNestStatus === 'pending') {
+      targetAudience.printNestConfirmed = false;
+    } else if (formData.targetPrintNestStatus === 'confirmed') {
+      targetAudience.printNestConfirmed = true;
+    }
+
+    // Mağaza durumu
+    if (formData.targetStoreStatus === 'has-store') {
+      targetAudience.hasEtsyStore = true;
+    } else if (formData.targetStoreStatus === 'no-store') {
+      targetAudience.hasEtsyStore = false;
+    }
+
+    // Eğer hiçbir kriter seçilmemişse null döndür
+    return Object.keys(targetAudience).length > 0 ? targetAudience : null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
+      const submitData = {
+        title: formData.title,
+        message: formData.message,
+        type: formData.type,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        isActive: formData.isActive,
+        targetAudience: buildTargetAudience()
+      };
+
       if (modalMode === 'create') {
-        await createAnnouncement(formData);
+        await createAnnouncement(submitData);
         toast.success('Bildirim oluşturuldu');
       } else {
-        await updateAnnouncement(currentAnnouncement.id, formData);
+        await updateAnnouncement(currentAnnouncement.id, submitData);
         toast.success('Bildirim güncellendi');
       }
       
@@ -188,6 +275,44 @@ const AnnouncementsManagement = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const getTargetAudienceText = (targetAudience) => {
+    if (!targetAudience) {
+      return <Badge bg="secondary">👥 Herkes</Badge>;
+    }
+
+    const badges = [];
+    
+    if (targetAudience.roles && targetAudience.roles.length > 0) {
+      badges.push(
+        <Badge key="roles" bg="primary" className="me-1">
+          {targetAudience.roles.map(r => 
+            r === 'admin' ? '👨‍💼' : r === 'support' ? '🛟' : '👤'
+          ).join(' ')}
+        </Badge>
+      );
+    }
+
+    if (targetAudience.hasActiveSubscription === true) {
+      badges.push(<Badge key="premium" bg="warning" text="dark" className="me-1">💎 Premium</Badge>);
+    } else if (targetAudience.hasActiveSubscription === false) {
+      badges.push(<Badge key="non-premium" bg="secondary" className="me-1">⭕ Non-Premium</Badge>);
+    }
+
+    if (targetAudience.printNestConfirmed === false) {
+      badges.push(<Badge key="printnest-pending" bg="info" className="me-1">⏳ PrintNest Onay Bekliyor</Badge>);
+    } else if (targetAudience.printNestConfirmed === true) {
+      badges.push(<Badge key="printnest-confirmed" bg="success" className="me-1">✅ PrintNest Onaylı</Badge>);
+    }
+
+    if (targetAudience.hasEtsyStore === false) {
+      badges.push(<Badge key="no-store" bg="danger" className="me-1">❌ Mağaza Yok</Badge>);
+    } else if (targetAudience.hasEtsyStore === true) {
+      badges.push(<Badge key="has-store" bg="success" className="me-1">🏪 Mağaza Var</Badge>);
+    }
+
+    return badges.length > 0 ? <div className="d-flex flex-wrap gap-1">{badges}</div> : <Badge bg="secondary">👥 Herkes</Badge>;
   };
 
   const isAnnouncementActive = (announcement) => {
@@ -281,6 +406,7 @@ const AnnouncementsManagement = () => {
                       <th>Durum</th>
                       <th>Başlık</th>
                       <th>Tip</th>
+                      <th>Hedef Kitle</th>
                       <th>Başlangıç</th>
                       <th>Bitiş</th>
                       <th>Oluşturulma</th>
@@ -324,6 +450,9 @@ const AnnouncementsManagement = () => {
                                announcement.type === 'warning' ? 'Uyarı' :
                                announcement.type === 'success' ? 'Başarılı' : 'Hata'}
                             </Badge>
+                          </td>
+                          <td className="small">
+                            {getTargetAudienceText(announcement.targetAudience)}
                           </td>
                           <td className="small">{formatDate(announcement.startDate)}</td>
                           <td className="small">{formatDate(announcement.endDate)}</td>
@@ -479,6 +608,112 @@ const AnnouncementsManagement = () => {
                 </Form.Group>
               </Col>
             </Row>
+
+            <hr />
+
+            {/* Hedef Kitle Ayarları */}
+            <h5 className="mb-3">🎯 Hedef Kitle Ayarları</h5>
+            
+            <Form.Group className="mb-3">
+              <Form.Check
+                type="switch"
+                name="targetEveryone"
+                label="Herkese Göster"
+                checked={formData.targetEveryone}
+                onChange={(e) => setFormData(prev => ({ ...prev, targetEveryone: e.target.checked }))}
+              />
+              <Form.Text className="text-muted">
+                Aktif edilirse tüm kullanıcılar bu bildirimi görecektir. Kapalıysa aşağıdaki filtrelere göre hedef kitle belirlenecektir.
+              </Form.Text>
+            </Form.Group>
+
+            {!formData.targetEveryone && (
+              <>
+                {/* Rol Tabanlı Hedefleme */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Sadece Bu Rollere Göster</Form.Label>
+                  <div className="d-flex gap-2 mb-2">
+                    <Form.Check
+                      type="checkbox"
+                      label="👤 Kullanıcılar"
+                      checked={formData.targetRoles.includes('user')}
+                      onChange={() => handleRoleToggle('user')}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="👨‍💼 Adminler"
+                      checked={formData.targetRoles.includes('admin')}
+                      onChange={() => handleRoleToggle('admin')}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="🛟 Destek"
+                      checked={formData.targetRoles.includes('support')}
+                      onChange={() => handleRoleToggle('support')}
+                    />
+                  </div>
+                  <Form.Text className="text-muted">
+                    Hiçbiri seçilmezse tüm roller dahil edilir
+                  </Form.Text>
+                </Form.Group>
+
+                {/* Premium Üyelik Durumu */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Premium Üyelik Durumu</Form.Label>
+                  <Form.Select
+                    name="targetSubscriptionType"
+                    value={formData.targetSubscriptionType}
+                    onChange={handleInputChange}
+                  >
+                    <option value="all">Tüm Üyeler</option>
+                    <option value="premium">💎 Sadece Premium Üyeler</option>
+                    <option value="non-premium">⭕ Sadece Premium Olmayan Üyeler</option>
+                  </Form.Select>
+                  <Form.Text className="text-muted">
+                    Premium üyelik durumuna göre filtreleme
+                  </Form.Text>
+                </Form.Group>
+
+                {/* PrintNest Onay Durumu */}
+                <Form.Group className="mb-3">
+                  <Form.Label>PrintNest Onay Durumu</Form.Label>
+                  <Form.Select
+                    name="targetPrintNestStatus"
+                    value={formData.targetPrintNestStatus}
+                    onChange={handleInputChange}
+                  >
+                    <option value="all">Tüm Kullanıcılar</option>
+                    <option value="pending">⏳ Onay Bekleyenler (Henüz Onaylanmamış)</option>
+                    <option value="confirmed">✅ Onaylanmış Kullanıcılar</option>
+                  </Form.Select>
+                  <Form.Text className="text-muted">
+                    PrintNest onay durumuna göre filtreleme
+                  </Form.Text>
+                </Form.Group>
+
+                {/* Etsy Mağaza Durumu */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Etsy Mağaza Durumu</Form.Label>
+                  <Form.Select
+                    name="targetStoreStatus"
+                    value={formData.targetStoreStatus}
+                    onChange={handleInputChange}
+                  >
+                    <option value="all">Tüm Kullanıcılar</option>
+                    <option value="has-store">🏪 Mağaza URL'si Girmiş Olanlar</option>
+                    <option value="no-store">❌ Mağaza URL'si Girmemiş Olanlar</option>
+                  </Form.Select>
+                  <Form.Text className="text-muted">
+                    Etsy mağaza URL durumuna göre filtreleme
+                  </Form.Text>
+                </Form.Group>
+
+                <div className="alert alert-info small">
+                  <FaInfoCircle className="me-2" />
+                  <strong>Bilgi:</strong> Birden fazla filtre seçerseniz, tüm koşulları sağlayan kullanıcılar bildirimi görecektir (VE mantığı ile çalışır).
+                </div>
+              </>
+            )}
 
             <div className="alert alert-info small">
               <FaInfoCircle className="me-2" />
