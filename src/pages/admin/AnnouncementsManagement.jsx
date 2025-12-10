@@ -453,6 +453,15 @@ const AnnouncementsManagement = () => {
                           </td>
                           <td className="small">
                             {getTargetAudienceText(announcement.targetAudience)}
+                            
+                            {/* Kaç kişinin göreceği bilgisi */}
+                            {announcement.recipientCount !== undefined && (
+                              <div className="mt-2">
+                                <Badge bg="dark" className="d-flex align-items-center gap-1" style={{ width: 'fit-content' }}>
+                                  👥 {announcement.recipientCount.toLocaleString('tr-TR')} kişi görecek
+                                </Badge>
+                              </div>
+                            )}
                           </td>
                           <td className="small">{formatDate(announcement.startDate)}</td>
                           <td className="small">{formatDate(announcement.endDate)}</td>
