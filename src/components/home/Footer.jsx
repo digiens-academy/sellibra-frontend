@@ -58,6 +58,22 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Legal */}
+          <div className="footer-section">
+            <h3 className="footer-heading">Yasal</h3>
+            <ul className="footer-links">
+              <li>
+                <Link to="/privacy-policy">Gizlilik Politikası</Link>
+              </li>
+              <li>
+                <Link to="/terms-of-service">Kullanım Koşulları</Link>
+              </li>
+              <li>
+                <Link to="/cookie-policy">Çerez Politikası</Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Contact */}
           <div className="footer-section">
             <h3 className="footer-heading">İletişim</h3>
@@ -79,6 +95,13 @@ const Footer = () => {
           <p className="footer-copyright">
             © {currentYear} Sellibra. Tüm hakları saklıdır.
           </p>
+          <div className="footer-legal-links">
+            <Link to="/privacy-policy" className="footer-legal-link">Gizlilik</Link>
+            <span className="footer-legal-separator">•</span>
+            <Link to="/terms-of-service" className="footer-legal-link">Koşullar</Link>
+            <span className="footer-legal-separator">•</span>
+            <Link to="/cookie-policy" className="footer-legal-link">Çerezler</Link>
+          </div>
         </div>
       </div>
     </footer>

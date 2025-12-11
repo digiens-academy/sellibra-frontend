@@ -32,6 +32,9 @@ import ProfilePage from './pages/ProfilePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AnnouncementsManagement from './pages/admin/AnnouncementsManagement';
 import SupportDashboard from './pages/support/SupportDashboard';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsOfService from './pages/legal/TermsOfService';
+import CookiePolicy from './pages/legal/CookiePolicy';
 
 // Constants
 import { ROUTES } from './utils/constants';
@@ -55,6 +58,11 @@ function App() {
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          
+          {/* Legal Pages - Public */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
           
           {/* Private Routes - With Header */}
           <Route

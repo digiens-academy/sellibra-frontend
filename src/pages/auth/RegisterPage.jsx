@@ -87,7 +87,7 @@ const RegisterPage = () => {
                     <strong>⚠️ Önemli Duyuru:</strong> Etsy mağaza linklerini
                     girmeleri için kullanıcılardan gelen yoğun talep üzerine
                     süreyi uzatmaya karar verdik! Henüz mağaza URL'nizi
-                    girmediyseniz endişelenmeyin; <strong style={{color: '#FD7979'}}>7 Aralık 2025</strong> tarihine kadar
+                    girmediyseniz endişelenmeyin; <strong style={{color: '#FD7979'}}>25 Aralık 2025</strong> tarihine kadar
                     vaktiniz var.
                   </p>
                 </div>
