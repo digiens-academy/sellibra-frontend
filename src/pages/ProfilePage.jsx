@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, ListGroup, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, ListGroup, Modal, Badge, Spinner } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { userApi } from '../api/userApi';
 import { etsyStoreApi } from '../api/etsyStoreApi';
+import { etsyOAuthApi } from '../api/etsyOAuthApi';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
+import { FaEtsy, FaCheckCircle, FaTimesCircle, FaExclamationTriangle, FaSync, FaPlug, FaUnlink } from 'react-icons/fa';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuthStore();
@@ -26,6 +28,7 @@ const ProfilePage = () => {
     storeUrl: '',
     storeName: '',
   });
+  const [connectingOAuth, setConnectingOAuth] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,12 +43,36 @@ const ProfilePage = () => {
   // Load Etsy stores
   useEffect(() => {
     loadEtsyStores();
+    checkOAuthCallback();
   }, []);
+
+  // Check if we're coming back from OAuth callback
+  const checkOAuthCallback = () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('etsy_connected') === 'true') {
+      const shopName = params.get('shop_name');
+      toast.success(`Etsy mağazası başarıyla bağlandı: ${shopName || 'Mağaza'}`);
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Reload stores
+      loadEtsyStores();
+    } else if (params.get('etsy_error')) {
+      const error = params.get('etsy_error');
+      const errorMessages = {
+        missing_params: 'Bağlantı parametreleri eksik',
+        invalid_state: 'Geçersiz bağlantı durumu',
+        connection_failed: 'Bağlantı başarısız oldu',
+      };
+      toast.error(errorMessages[error] || 'Etsy bağlantısı başarısız oldu');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  };
 
   const loadEtsyStores = async () => {
     try {
       setLoadingStores(true);
-      const response = await etsyStoreApi.getStores();
+      // Load stores with OAuth status
+      const response = await etsyOAuthApi.getConnectionStatus();
       setEtsyStores(response.data.stores);
     } catch (error) {
       console.error('Load stores error:', error);
@@ -145,6 +172,74 @@ const ProfilePage = () => {
     }
   };
 
+  // OAuth handlers
+  const handleConnectEtsy = async () => {
+    try {
+      setConnectingOAuth(true);
+      const response = await etsyOAuthApi.initiateConnection();
+      // Redirect to Etsy OAuth page
+      window.location.href = response.data.authorizationUrl;
+    } catch (error) {
+      console.error('Connect Etsy error:', error);
+      toast.error('Etsy bağlantısı başlatılamadı');
+      setConnectingOAuth(false);
+    }
+  };
+
+  const handleDisconnectStore = async (storeId, storeName) => {
+    if (!window.confirm(`${storeName} mağazasının bağlantısını kesmek istediğinize emin misiniz?`)) {
+      return;
+    }
+
+    try {
+      await etsyOAuthApi.disconnectStore(storeId);
+      toast.success('Mağaza bağlantısı kesildi');
+      loadEtsyStores();
+    } catch (error) {
+      console.error('Disconnect store error:', error);
+      toast.error('Bağlantı kesilemedi');
+    }
+  };
+
+  const handleRefreshToken = async (storeId) => {
+    try {
+      await etsyOAuthApi.refreshToken(storeId);
+      toast.success('Token yenilendi');
+      loadEtsyStores();
+    } catch (error) {
+      console.error('Refresh token error:', error);
+      toast.error('Token yenilenemedi. Lütfen yeniden bağlanın.');
+    }
+  };
+
+  const handleTestConnection = async (storeId) => {
+    try {
+      const response = await etsyOAuthApi.testConnection(storeId);
+      if (response.data.connected) {
+        toast.success('Bağlantı başarılı! ✅');
+      } else {
+        toast.error('Bağlantı başarısız ❌');
+      }
+    } catch (error) {
+      console.error('Test connection error:', error);
+      toast.error('Bağlantı testi başarısız');
+    }
+  };
+
+  // Helper to get connection status badge
+  const getConnectionBadge = (store) => {
+    if (!store.isConnected) {
+      return <Badge bg="secondary"><FaTimesCircle /> Bağlı Değil</Badge>;
+    }
+    if (store.tokenStatus === 'expired') {
+      return <Badge bg="warning" text="dark"><FaExclamationTriangle /> Süre Dolmuş</Badge>;
+    }
+    if (store.tokenStatus === 'valid') {
+      return <Badge bg="success"><FaCheckCircle /> Bağlı</Badge>;
+    }
+    return <Badge bg="secondary">Bilinmiyor</Badge>;
+  };
+
   return (
     <div className="dashboard-container">
       <Container fluid className="main-content">
@@ -228,59 +323,183 @@ const ProfilePage = () => {
             </Card>
           </Col>
 
-          {/* Sağ Taraf - Etsy Mağazaları */}
+          {/* Sağ Taraf - Etsy Bölümü */}
           <Col lg={6} md={12}>
-            <Card className="h-100">
+            {/* Kayıtlı Mağazalar (OAuth'suz) */}
+            <Card className="mb-3">
               <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <h5 className="mb-0">Etsy Mağazalarım</h5>
-                  <Button variant="success" size="sm" onClick={handleAddStore}>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h5 className="mb-0">📋 Kayıtlı Mağazalar</h5>
+                  <Button variant="outline-primary" size="sm" onClick={handleAddStore}>
                     + Mağaza Ekle
                   </Button>
                 </div>
 
+                <div className="alert alert-light small mb-3">
+                  <strong>ℹ️ Basit Kayıt:</strong> Mağaza URL'lerinizi kaydedin. 
+                  API bağlantısı için aşağıdaki "Etsy OAuth" bölümünü kullanın.
+                </div>
+
                 {loadingStores ? (
-                  <p className="text-muted">Yükleniyor...</p>
-                ) : etsyStores.length === 0 ? (
-                  <p className="text-muted">Henüz mağaza eklenmemiş.</p>
+                  <div className="text-center py-3">
+                    <Spinner animation="border" variant="primary" size="sm" />
+                  </div>
+                ) : etsyStores.filter(store => !store.isConnected && !store.shopId).length === 0 ? (
+                  <p className="text-muted small text-center">Kayıtlı mağaza yok</p>
+                ) : (
+                  <ListGroup variant="flush">
+                    {etsyStores
+                      .filter(store => !store.isConnected && !store.shopId)
+                      .map((store) => (
+                        <ListGroup.Item key={store.id} className="px-0 py-2">
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div className="flex-grow-1">
+                              <strong className="d-block">{store.storeName || 'İsimsiz Mağaza'}</strong>
+                              <a
+                                href={store.storeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted small"
+                              >
+                                {store.storeUrl}
+                              </a>
+                            </div>
+                            <div className="d-flex gap-1">
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => handleEditStore(store)}
+                              >
+                                Düzenle
+                              </Button>
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => handleDeleteStore(store.id)}
+                              >
+                                Sil
+                              </Button>
+                            </div>
+                          </div>
+                        </ListGroup.Item>
+                      ))}
+                  </ListGroup>
+                )}
+              </Card.Body>
+            </Card>
+
+            {/* Etsy OAuth Bağlantıları */}
+            <Card>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h5 className="mb-0 d-flex align-items-center gap-2">
+                    <FaEtsy style={{ color: '#F1641E' }} /> Etsy OAuth Bağlantıları
+                  </h5>
+                  <Button 
+                    variant="success" 
+                    size="sm" 
+                    onClick={handleConnectEtsy}
+                    disabled={connectingOAuth}
+                    className="d-flex align-items-center gap-2"
+                  >
+                    {connectingOAuth ? (
+                      <>
+                        <Spinner size="sm" animation="border" />
+                        Bağlanıyor...
+                      </>
+                    ) : (
+                      <>
+                        <FaPlug /> Etsy Bağla
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                <div className="alert alert-success small mb-3">
+                  <strong>🔐 OAuth ile Güvenli Bağlantı:</strong> Etsy mağazanızı güvenli OAuth protokolü ile bağlayın. 
+                  Şifrenizi bizimle paylaşmanıza gerek yok!
+                </div>
+
+                {loadingStores ? (
+                  <div className="text-center py-4">
+                    <Spinner animation="border" variant="primary" />
+                    <p className="text-muted mt-2">Yükleniyor...</p>
+                  </div>
+                ) : etsyStores.filter(store => store.isConnected || store.shopId).length === 0 ? (
+                  <div className="text-center py-4">
+                    <FaEtsy size={48} style={{ color: '#F1641E', opacity: 0.3 }} />
+                    <p className="text-muted mt-3">Henüz OAuth bağlantısı yok.</p>
+                    <p className="small text-muted">
+                      Yukarıdaki "Etsy Bağla" butonuna tıklayarak mağazanızı bağlayın.
+                    </p>
+                  </div>
                 ) : (
                   <ListGroup>
-                    {etsyStores.map((store) => (
-                      <ListGroup.Item
-                        key={store.id}
-                        className="d-flex justify-content-between align-items-center"
-                      >
-                        <div>
-                          <strong>{store.storeName || 'İsimsiz Mağaza'}</strong>
-                          <br />
-                          <a
-                            href={store.storeUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted small"
-                          >
-                            {store.storeUrl}
-                          </a>
-                        </div>
-                        <div>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                            onClick={() => handleEditStore(store)}
-                          >
-                            Düzenle
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDeleteStore(store.id)}
-                          >
-                            Sil
-                          </Button>
-                        </div>
-                      </ListGroup.Item>
-                    ))}
+                    {etsyStores
+                      .filter(store => store.isConnected || store.shopId)
+                      .map((store) => (
+                        <ListGroup.Item key={store.id} className="p-3">
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div className="flex-grow-1">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <strong>{store.storeName || 'İsimsiz Mağaza'}</strong>
+                                {getConnectionBadge(store)}
+                              </div>
+                              <a
+                                href={store.storeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted small d-block mb-2"
+                              >
+                                {store.storeUrl}
+                              </a>
+                              {store.shopId && (
+                                <small className="text-muted">Shop ID: {store.shopId}</small>
+                              )}
+                            </div>
+
+                            <div className="d-flex flex-column gap-2">
+                              {store.isConnected ? (
+                                <>
+                                  {store.tokenStatus === 'expired' && (
+                                    <Button
+                                      variant="warning"
+                                      size="sm"
+                                      onClick={() => handleRefreshToken(store.id)}
+                                      className="d-flex align-items-center gap-1"
+                                    >
+                                      <FaSync /> Yenile
+                                    </Button>
+                                  )}
+                                  <Button
+                                    variant="outline-primary"
+                                    size="sm"
+                                    onClick={() => handleTestConnection(store.id)}
+                                  >
+                                    Test Et
+                                  </Button>
+                                  <Button
+                                    variant="outline-danger"
+                                    size="sm"
+                                    onClick={() => handleDisconnectStore(store.id, store.storeName)}
+                                    className="d-flex align-items-center gap-1"
+                                  >
+                                    <FaUnlink /> Bağlantıyı Kes
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleDeleteStore(store.id)}
+                                >
+                                  Sil
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </ListGroup.Item>
+                      ))}
                   </ListGroup>
                 )}
               </Card.Body>
